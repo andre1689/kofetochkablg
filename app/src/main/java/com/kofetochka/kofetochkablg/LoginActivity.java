@@ -1,6 +1,7 @@
 package com.kofetochka.kofetochkablg;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -69,11 +70,10 @@ public class LoginActivity extends Activity {
         if (Login!=null){
             if (etPassword.getText().toString().equals(Password)){
                 if(Block.equals("0")){
-                    //Intent intent = new Intent(this,WorkActivity.class);
-                    //intent.putExtra("Login", Login);
-                    //intent.putExtra("NameRole",NameRole);
-                    //startActivity(intent);
-                    Toast.makeText(this, "Верный пароль.", Toast.LENGTH_LONG).show();
+                    Intent intent = new Intent(this,WorkActivity.class);
+                    intent.putExtra("Login", Login);
+                    intent.putExtra("NameRole",NameRole);
+                    startActivity(intent);
                 }
                 else Toast.makeText(this, "Ваша учетная запись заблокирована. Обратитесь к администратору.", Toast.LENGTH_LONG).show();
             }
