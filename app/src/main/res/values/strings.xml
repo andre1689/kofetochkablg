@@ -1,3 +1,4 @@
 <resources>
-    <string name="app_name">Kofetochkablg</string>
+    <string name="app_name">КофеТочка</string>
+    <string name="item_home">Home</string>
 </resources>
