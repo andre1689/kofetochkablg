@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">КофеТочка</string>
     <string name="item_home">Home</string>
+    <string name="item_openshift">Открыть смену</string>
 </resources>

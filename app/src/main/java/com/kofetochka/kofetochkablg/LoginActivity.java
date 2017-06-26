@@ -73,6 +73,8 @@ public class LoginActivity extends Activity {
                     Intent intent = new Intent(this,WorkActivity.class);
                     intent.putExtra("Login", Login);
                     intent.putExtra("NameRole",NameRole);
+                    intent.putExtra("Surname", Surname);
+                    intent.putExtra("Name", Name);
                     startActivity(intent);
                 }
                 else Toast.makeText(this, "Ваша учетная запись заблокирована. Обратитесь к администратору.", Toast.LENGTH_LONG).show();
