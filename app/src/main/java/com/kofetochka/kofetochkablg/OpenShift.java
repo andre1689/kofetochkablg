@@ -1,5 +1,6 @@
 package com.kofetochka.kofetochkablg;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -23,7 +24,9 @@ import com.kofetochka.inquiry.InquiryGetShiftID;
 import org.json.JSONArray;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.Locale;
 
 public class OpenShift extends AppCompatActivity{
@@ -33,16 +36,18 @@ public class OpenShift extends AppCompatActivity{
     private String Name_CH = null;
     private String ID_CH = null;
     private String Date;
+    private String DateDown1day;
     private String Time;
     private String ResAddShift;
     private String ResAddStorage;
-    private String ID_Shift;
+    private String ID_Shift=null;
     private String Login;
     private int l;
     String[] arrayName_CH;
     EditText et_DiceBox_150, et_DiceBox_200, et_DiceBox_300, et_DiceBox_400, et_DiceBox_Sum, et_Coffee_1kg, et_Coffee_250g, et_DripCoffee, et_Exchenge;
     Spinner sp_CH_Name;
     Date dateNow;
+    Calendar calendar;
 
     InquiryCoffeeHouseID inquiryCoffeeHouseID;
     InquiryAddShift inquiryAddShift;
@@ -85,6 +90,11 @@ public class OpenShift extends AppCompatActivity{
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void openShift(View view){
+        Login = getIntent().getStringExtra("Login");
+        String S = "";
+
+        InitializationDateAndTime();
+
         et_DiceBox_150 = (EditText) findViewById(R.id.editText_DiceBox_150);
         et_DiceBox_200 = (EditText) findViewById(R.id.editText_DiceBox_200);
         et_DiceBox_300 = (EditText) findViewById(R.id.editText_DiceBox_300);
@@ -96,9 +106,9 @@ public class OpenShift extends AppCompatActivity{
         et_Exchenge = (EditText) findViewById(R.id.editText_Exchange);
         sp_CH_Name = (Spinner) findViewById(R.id.spinner_CoffeeHouse);
 
-        
+        getID_CH();
+        getShiftID();
 
-        String S = "";
         if (et_DiceBox_150.getText().toString().equals(S) ||
                 et_DiceBox_200.getText().toString().equals(S) ||
                 et_DiceBox_300.getText().toString().equals(S) ||
@@ -111,24 +121,31 @@ public class OpenShift extends AppCompatActivity{
         {
             Toast.makeText(this, "Для открытия смены заполните все поля", Toast.LENGTH_LONG).show();
             //et_DiceBox_150.setBackgroundColor(Color.parseColor("#81ff4081"));
-        } else {
-
-            getID_CH();
-
-            dateNow = new Date();
-            SimpleDateFormat formatForDateNow = new SimpleDateFormat("yyyy-MM-dd");
-            SimpleDateFormat formatForTimeNow = new SimpleDateFormat("hh:mm");
-            Date = formatForDateNow.format(dateNow);
-            Time = formatForTimeNow.format(dateNow);
-
-            Login = getIntent().getStringExtra("Login");
-
+        } else if (ID_Shift!=null){
+            Toast.makeText(this, "Смена уже была создана", Toast.LENGTH_SHORT).show();
+        }
+        else {
             addShift();
 
             getShiftID();
 
             addStorage();
+
+            Intent intent = new Intent(this,WorkActivity.class);
+            startActivity(intent);
         }
+    }
+
+    private void InitializationDateAndTime() {
+        dateNow = new Date();
+        SimpleDateFormat formatForDateNow = new SimpleDateFormat("yyyy-M-dd");
+        SimpleDateFormat formatForTimeNow = new SimpleDateFormat("hh:mm");
+        Date = formatForDateNow.format(dateNow);
+        Time = formatForTimeNow.format(dateNow);
+
+        calendar = new GregorianCalendar();
+        calendar.add(Calendar.DAY_OF_YEAR,-1);
+        DateDown1day = Integer.toString(calendar.get(Calendar.YEAR))+"-"+Integer.toString(calendar.get(Calendar.MONTH)+1)+"-"+Integer.toString(calendar.get(Calendar.DAY_OF_MONTH));
     }
 
     private void addStorage() {
@@ -150,7 +167,7 @@ public class OpenShift extends AppCompatActivity{
 
     private void getShiftID() {
         inquiryGetShiftID = new InquiryGetShiftID();
-        inquiryGetShiftID.start(Date,Time,ID_CH);
+        inquiryGetShiftID.start(Date,ID_CH,Login);
 
         try {
             inquiryGetShiftID.join();

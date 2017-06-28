@@ -25,8 +25,9 @@ import java.util.ArrayList;
 public class InquiryGetShiftID extends Thread{
 
     private String Date_Shift;
-    private String Time_Shift;
+    //private String Time_Shift;
     private String ID_CH;
+    private String Login;
     private String ID_Shift;
 
     private String Result = null;
@@ -36,8 +37,9 @@ public class InquiryGetShiftID extends Thread{
     public void run(){
         ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
         nameValuePairs.add(new BasicNameValuePair("Date_Shift",Date_Shift));
-        nameValuePairs.add(new BasicNameValuePair("Time_Shift",Time_Shift));
+        //nameValuePairs.add(new BasicNameValuePair("Time_Shift",Time_Shift));
         nameValuePairs.add(new BasicNameValuePair("ID_CH",ID_CH));
+        nameValuePairs.add(new BasicNameValuePair("Login",Login));
         try {
             HttpClient httpClient = new DefaultHttpClient();
             HttpPost httpPost = new HttpPost("http://146143.simplecloud.club/kofetochkablg/get_shift_id.php");
@@ -78,10 +80,11 @@ public class InquiryGetShiftID extends Thread{
 
     }
 
-    public void start (String date_Shift, String time_Shift, String id_CH){
+    public void start (String date_Shift, String id_CH, String login){
         this.Date_Shift = date_Shift;
-        this.Time_Shift = time_Shift;
+        //this.Time_Shift = time_Shift;
         this.ID_CH = id_CH;
+        this.Login = login;
         this.start();
     }
 
