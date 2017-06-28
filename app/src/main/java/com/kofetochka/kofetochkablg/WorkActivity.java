@@ -24,6 +24,7 @@ public class WorkActivity extends AppCompatActivity {
     private String Surname;
     private String Name;
     private String NameRole;
+    private String Login;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -45,6 +46,7 @@ public class WorkActivity extends AppCompatActivity {
         Surname = getIntent().getStringExtra("Surname");
         Name = getIntent().getStringExtra("Name");
         NameRole = getIntent().getStringExtra("NameRole");
+        Login = getIntent().getStringExtra("Login");
 
         accountHeaderResult = new AccountHeaderBuilder()
                 .withActivity(this)
@@ -77,6 +79,7 @@ public class WorkActivity extends AppCompatActivity {
                         if (drawerItem!=null){
                             if (drawerItem.getIdentifier()==2){
                                 Intent intent = new Intent(com.kofetochka.kofetochkablg.WorkActivity.this, OpenShift.class);
+                                intent.putExtra("Login",Login);
                                 startActivity(intent);
                             }
                         }
