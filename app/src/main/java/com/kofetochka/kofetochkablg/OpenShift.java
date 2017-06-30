@@ -9,6 +9,7 @@ import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -21,13 +22,10 @@ import com.kofetochka.inquiry.InquiryCoffeeHouse;
 import com.kofetochka.inquiry.InquiryCoffeeHouseID;
 import com.kofetochka.inquiry.InquiryGetShiftID;
 
-import org.json.JSONArray;
-
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.Locale;
 
 public class OpenShift extends AppCompatActivity{
 
@@ -62,6 +60,7 @@ public class OpenShift extends AppCompatActivity{
         if (toolbar != null){
             setSupportActionBar (toolbar);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         }
 
         InitializationSpinnerCoffeeHouse();
@@ -208,4 +207,15 @@ public class OpenShift extends AppCompatActivity{
 
         ID_CH = inquiryCoffeeHouseID.resID_CH();
     }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id==16908332)
+        {
+            Intent intent = new Intent(this,WorkActivity.class);
+            startActivity(intent);
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
 }
