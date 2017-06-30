@@ -71,7 +71,10 @@ public class WorkActivity extends AppCompatActivity {
                         new DividerDrawerItem(),
                         new PrimaryDrawerItem()
                                 .withName(R.string.item_openshift)
-                                .withIdentifier(2)
+                                .withIdentifier(2),
+                        new PrimaryDrawerItem()
+                                .withName("Закрыть смену")
+                                .withIdentifier(3)
                 )
                 .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
                     @Override
@@ -80,6 +83,11 @@ public class WorkActivity extends AppCompatActivity {
                             if (drawerItem.getIdentifier()==2){
                                 Intent intent = new Intent(com.kofetochka.kofetochkablg.WorkActivity.this, OpenShift.class);
                                 intent.putExtra("Login",Login);
+                                startActivity(intent);
+                            }
+                            if (drawerItem.getIdentifier()==3){
+                                Intent intent = new Intent(com.kofetochka.kofetochkablg.WorkActivity.this, CloseShiftActivity.class);
+                                //intent.putExtra("Login",Login);
                                 startActivity(intent);
                             }
                         }

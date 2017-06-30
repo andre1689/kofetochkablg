@@ -25,6 +25,10 @@
 
         </activity>
 
+        <activity android:name=".CloseShiftActivity">
+
+        </activity>
+
     </application>
 
     <uses-permission android:name="android.permission.INTERNET" />
