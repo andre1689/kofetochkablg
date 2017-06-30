@@ -83,6 +83,9 @@ public class WorkActivity extends AppCompatActivity {
                             if (drawerItem.getIdentifier()==2){
                                 Intent intent = new Intent(com.kofetochka.kofetochkablg.WorkActivity.this, OpenShift.class);
                                 intent.putExtra("Login",Login);
+                                intent.putExtra("NameRole",NameRole);
+                                intent.putExtra("Surname", Surname);
+                                intent.putExtra("Name", Name);
                                 startActivity(intent);
                             }
                             if (drawerItem.getIdentifier()==3){

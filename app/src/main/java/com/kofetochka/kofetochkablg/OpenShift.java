@@ -40,7 +40,11 @@ public class OpenShift extends AppCompatActivity{
     private String ResAddStorage;
     private String ID_Shift=null;
     private String Login;
+    private String Surname;
+    private String Name;
+    private String NameRole;
     private int l;
+
     String[] arrayName_CH;
     EditText et_DiceBox_150, et_DiceBox_200, et_DiceBox_300, et_DiceBox_400, et_DiceBox_Sum, et_Coffee_1kg, et_Coffee_250g, et_DripCoffee, et_Exchenge;
     Spinner sp_CH_Name;
@@ -55,6 +59,10 @@ public class OpenShift extends AppCompatActivity{
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.openshift_layout);
+
+        Surname = getIntent().getStringExtra("Surname");
+        Name = getIntent().getStringExtra("Name");
+        NameRole = getIntent().getStringExtra("NameRole");
 
         Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
         if (toolbar != null){
@@ -213,6 +221,9 @@ public class OpenShift extends AppCompatActivity{
         if (id==16908332)
         {
             Intent intent = new Intent(this,WorkActivity.class);
+            intent.putExtra("NameRole",NameRole);
+            intent.putExtra("Surname", Surname);
+            intent.putExtra("Name", Name);
             startActivity(intent);
         }
         return super.onOptionsItemSelected(item);
