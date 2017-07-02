@@ -138,9 +138,18 @@ public class OpenShift extends AppCompatActivity{
 
             addStorage();
 
-            Intent intent = new Intent(this,WorkActivity.class);
-            startActivity(intent);
+            startWorkActivity();
         }
+    }
+
+    private void startWorkActivity() {
+        Intent intent = new Intent(this,WorkActivity.class);
+        intent.putExtra("Login",Login);
+        intent.putExtra("NameRole",NameRole);
+        intent.putExtra("Surname", Surname);
+        intent.putExtra("Name", Name);
+        startActivity(intent);
+        finish();
     }
 
     private void InitializationDateAndTime() {
@@ -220,11 +229,7 @@ public class OpenShift extends AppCompatActivity{
         int id = item.getItemId();
         if (id==16908332)
         {
-            Intent intent = new Intent(this,WorkActivity.class);
-            intent.putExtra("NameRole",NameRole);
-            intent.putExtra("Surname", Surname);
-            intent.putExtra("Name", Name);
-            startActivity(intent);
+            startWorkActivity();
         }
         return super.onOptionsItemSelected(item);
     }

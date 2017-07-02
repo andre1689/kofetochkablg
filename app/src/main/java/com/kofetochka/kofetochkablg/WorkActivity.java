@@ -25,6 +25,8 @@ public class WorkActivity extends AppCompatActivity {
     private String Name;
     private String NameRole;
     private String Login;
+    private String ID_Shift = null;
+    private String Name_CH = null;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -47,6 +49,8 @@ public class WorkActivity extends AppCompatActivity {
         Name = getIntent().getStringExtra("Name");
         NameRole = getIntent().getStringExtra("NameRole");
         Login = getIntent().getStringExtra("Login");
+        ID_Shift = getIntent().getStringExtra("ID_Shift");
+        Name_CH = getIntent().getStringExtra("Name_CH");
 
         accountHeaderResult = new AccountHeaderBuilder()
                 .withActivity(this)
@@ -90,7 +94,12 @@ public class WorkActivity extends AppCompatActivity {
                             }
                             if (drawerItem.getIdentifier()==3){
                                 Intent intent = new Intent(com.kofetochka.kofetochkablg.WorkActivity.this, CloseShiftActivity.class);
-                                //intent.putExtra("Login",Login);
+                                intent.putExtra("Login",Login);
+                                intent.putExtra("NameRole",NameRole);
+                                intent.putExtra("Surname", Surname);
+                                intent.putExtra("Name", Name);
+                                //intent.putExtra("ID_Shift", ID_Shift);
+                                //intent.putExtra("Name_CH", Name_CH);
                                 startActivity(intent);
                             }
                         }
