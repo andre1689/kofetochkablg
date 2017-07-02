@@ -6,10 +6,13 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.kofetochka.inquiry.InquiryAddStorage;
+import com.kofetochka.inquiry.InquiryGetID_St_OpenShift;
 import com.kofetochka.inquiry.InquiryGetNameCH;
 import com.kofetochka.inquiry.InquiryGetShiftID_ID_CH;
 
@@ -25,6 +28,9 @@ public class CloseShiftActivity extends AppCompatActivity{
     private String Name_CH;
     private String Login;
     private String Date;
+    private String ID_St;
+    private String S = "";
+    private String ResAddStorage;
 
     Date dateNow;
 
@@ -33,6 +39,8 @@ public class CloseShiftActivity extends AppCompatActivity{
 
     InquiryGetShiftID_ID_CH inquiryGetShiftID_id_ch;
     InquiryGetNameCH inquiryGetNameCH;
+    InquiryGetID_St_OpenShift inquiryGetID_st_openShift;
+    InquiryAddStorage inquiryAddStorage;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,6 +57,8 @@ public class CloseShiftActivity extends AppCompatActivity{
         NameRole = getIntent().getStringExtra("NameRole");
         Login = getIntent().getStringExtra("Login");
 
+        initializationEditText();
+
         dateNow = new Date();
         SimpleDateFormat formatForDateNow = new SimpleDateFormat("yyyy-M-dd");
         Date = formatForDateNow.format(dateNow);
@@ -64,6 +74,53 @@ public class CloseShiftActivity extends AppCompatActivity{
             getNameCH();
             tv_Name_CH.setText("Кофеточка: " + Name_CH);
         }
+    }
+
+    private void initializationEditText() {
+        et_DiceBox_150 = (EditText) findViewById(R.id.editText_DiceBox_150);
+        et_DiceBox_200 = (EditText) findViewById(R.id.editText_DiceBox_200);
+        et_DiceBox_300 = (EditText) findViewById(R.id.editText_DiceBox_300);
+        et_DiceBox_400 = (EditText) findViewById(R.id.editText_DiceBox_400);
+        et_DiceBox_Sum = (EditText) findViewById(R.id.editText_DiceBox_Sum);
+        et_Coffee_1kg = (EditText) findViewById(R.id.editText_Coffee_1kg);
+        et_Coffee_250g = (EditText) findViewById(R.id.editText_Coffee_250g);
+        et_DripCoffee = (EditText) findViewById(R.id.editText_DripCoffee);
+        et_Exchenge = (EditText) findViewById(R.id.editText_Exchange);
+    }
+
+    public void CloseShift (View view){
+
+        getID_St_OpenShift();
+
+        if (et_DiceBox_150.getText().toString().equals(S) ||
+                et_DiceBox_200.getText().toString().equals(S) ||
+                et_DiceBox_300.getText().toString().equals(S) ||
+                et_DiceBox_400.getText().toString().equals(S) ||
+                et_DiceBox_Sum.getText().toString().equals(S) ||
+                et_Coffee_1kg.getText().toString().equals(S) ||
+                et_Coffee_250g.getText().toString().equals(S) ||
+                et_DripCoffee.getText().toString().equals(S) ||
+                et_Exchenge.getText().toString().equals(S))
+        {
+            Toast.makeText(this, "Для закрытия смены заполните все поля", Toast.LENGTH_LONG).show();
+            //et_DiceBox_150.setBackgroundColor(Color.parseColor("#81ff4081"));
+        } else if (ID_St!=null){
+            Toast.makeText(this, "Смена уже была закрыта", Toast.LENGTH_SHORT).show();
+        }
+        else {
+            addStorage();
+        }
+    }
+
+    private void getID_St_OpenShift() {
+        inquiryGetID_st_openShift = new InquiryGetID_St_OpenShift();
+        inquiryGetID_st_openShift.start(ID_Shift);
+        try {
+            inquiryGetID_st_openShift.join();
+        } catch (InterruptedException e) {
+            Log.e("GetID_St_OpenShift",e.getMessage());
+        }
+        ID_St = inquiryGetID_st_openShift.resID_St();
     }
 
     private void getNameCH() {
@@ -98,5 +155,22 @@ public class CloseShiftActivity extends AppCompatActivity{
         intent.putExtra("Name", Name);
         startActivity(intent);
         finish();
+    }
+
+    private void addStorage() {
+        inquiryAddStorage = new InquiryAddStorage();
+        inquiryAddStorage.start("0", et_DiceBox_150.getText().toString(), et_DiceBox_200.getText().toString(), et_DiceBox_300.getText().toString(), et_DiceBox_400.getText().toString(), et_DiceBox_Sum.getText().toString(), et_Coffee_1kg.getText().toString(), et_Coffee_250g.getText().toString(), et_DripCoffee.getText().toString(), et_Exchenge.getText().toString(), ID_Shift);
+
+        try {
+            inquiryAddStorage.join();
+        } catch (InterruptedException e) {
+            Log.e("Pass 0", e.getMessage());
+        }
+
+        ResAddStorage = inquiryAddStorage.resSuccess();
+        if(ResAddStorage.equals("1")){
+            Toast.makeText(this, "Смена закрыта", Toast.LENGTH_SHORT).show();
+        }
+        else Toast.makeText(this, "Не удалось закрыть смену", Toast.LENGTH_SHORT).show();
     }
 }

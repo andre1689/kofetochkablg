@@ -175,7 +175,7 @@ public class OpenShift extends AppCompatActivity{
         }
 
         ResAddStorage = inquiryAddStorage.resSuccess();
-        if(ResAddShift.equals("1")){
+        if(ResAddStorage.equals("1")){
             Toast.makeText(this, "Данные внесены в базу данных", Toast.LENGTH_SHORT).show();
         }
         else Toast.makeText(this, "Не удалось внести данные в базу данных", Toast.LENGTH_SHORT).show();
