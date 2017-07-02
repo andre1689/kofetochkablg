@@ -10,6 +10,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.kofetochka.inquiry.InquiryGetNameCH;
 import com.kofetochka.inquiry.InquiryGetShiftID_ID_CH;
 
 import java.text.SimpleDateFormat;
@@ -31,6 +32,7 @@ public class CloseShiftActivity extends AppCompatActivity{
     TextView tv_Name_CH;
 
     InquiryGetShiftID_ID_CH inquiryGetShiftID_id_ch;
+    InquiryGetNameCH inquiryGetNameCH;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,8 +61,20 @@ public class CloseShiftActivity extends AppCompatActivity{
             Toast.makeText(this, "Смена не открыта", Toast.LENGTH_LONG).show();
             startWorkActivity();
         } else {
-            Toast.makeText(this, ID_CH, Toast.LENGTH_SHORT).show();
+            getNameCH();
+            tv_Name_CH.setText("Кофеточка: " + Name_CH);
         }
+    }
+
+    private void getNameCH() {
+        inquiryGetNameCH = new InquiryGetNameCH();
+        inquiryGetNameCH.start(ID_CH);
+        try {
+            inquiryGetNameCH.join();
+        } catch (InterruptedException e) {
+            Log.e("GetNameCH",e.getMessage());
+        }
+        Name_CH = inquiryGetNameCH.resName_CH();
     }
 
     private void getID_Shift_ID_CH() {
