@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -170,7 +171,20 @@ public class CloseShiftActivity extends AppCompatActivity{
         ResAddStorage = inquiryAddStorage.resSuccess();
         if(ResAddStorage.equals("1")){
             Toast.makeText(this, "Смена закрыта", Toast.LENGTH_SHORT).show();
+            startWorkActivity();
         }
         else Toast.makeText(this, "Не удалось закрыть смену", Toast.LENGTH_SHORT).show();
     }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id==16908332)
+        {
+            startWorkActivity();
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+
 }
