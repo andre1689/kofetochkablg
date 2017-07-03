@@ -60,7 +60,7 @@ public class CloseShiftActivity extends AppCompatActivity{
         initializationEditText();
 
         dateNow = new Date();
-        SimpleDateFormat formatForDateNow = new SimpleDateFormat("yyyy-M-dd");
+        SimpleDateFormat formatForDateNow = new SimpleDateFormat("yyyy-M-d");
         Date = formatForDateNow.format(dateNow);
 
         tv_Name_CH = (TextView)findViewById(R.id.textView_CoffeeHouse);

@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -20,7 +21,9 @@ import com.kofetochka.inquiry.InquiryAddShift;
 import com.kofetochka.inquiry.InquiryAddStorage;
 import com.kofetochka.inquiry.InquiryCoffeeHouse;
 import com.kofetochka.inquiry.InquiryCoffeeHouseID;
+import com.kofetochka.inquiry.InquiryGetIDShiftByDateID_CH;
 import com.kofetochka.inquiry.InquiryGetShiftID;
+import com.kofetochka.inquiry.InquiryGetStroageByDateCloseShift;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -34,19 +37,23 @@ public class OpenShift extends AppCompatActivity{
     private String Name_CH = null;
     private String ID_CH = null;
     private String Date;
-    private String DateDown1day;
+    private String DateBack1day;
     private String Time;
     private String ResAddShift;
     private String ResAddStorage;
     private String ID_Shift=null;
+    private String ID_Shift_BackDate;
     private String Login;
     private String Surname;
     private String Name;
     private String NameRole;
+    private String DiceBox_150, DiceBox_200, DiceBox_300, DiceBox_400, DiceBox_Sum, Coffee_1kg, Coffee_250g, DripCoffee, Exchenge;
     private int l;
+    private String S = "";
 
     String[] arrayName_CH;
     EditText et_DiceBox_150, et_DiceBox_200, et_DiceBox_300, et_DiceBox_400, et_DiceBox_Sum, et_Coffee_1kg, et_Coffee_250g, et_DripCoffee, et_Exchenge;
+    ImageView iv_DiceBox_150, iv_DiceBox_200, iv_DiceBox_300, iv_DiceBox_400, iv_DiceBox_Sum, iv_Coffee_1kg, iv_Coffee_250g, iv_DripCoffee, iv_Exchenge;
     Spinner sp_CH_Name;
     Date dateNow;
     Calendar calendar;
@@ -55,6 +62,8 @@ public class OpenShift extends AppCompatActivity{
     InquiryAddShift inquiryAddShift;
     InquiryGetShiftID inquiryGetShiftID;
     InquiryAddStorage inquiryAddStorage;
+    InquiryGetStroageByDateCloseShift inquiryGetStroageByDateCloseShift;
+    InquiryGetIDShiftByDateID_CH inquiryGetIDShiftByDateID_ch;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,6 +73,28 @@ public class OpenShift extends AppCompatActivity{
         Name = getIntent().getStringExtra("Name");
         NameRole = getIntent().getStringExtra("NameRole");
 
+        et_DiceBox_150 = (EditText) findViewById(R.id.editText_DiceBox_150);
+        et_DiceBox_200 = (EditText) findViewById(R.id.editText_DiceBox_200);
+        et_DiceBox_300 = (EditText) findViewById(R.id.editText_DiceBox_300);
+        et_DiceBox_400 = (EditText) findViewById(R.id.editText_DiceBox_400);
+        et_DiceBox_Sum = (EditText) findViewById(R.id.editText_DiceBox_Sum);
+        et_Coffee_1kg = (EditText) findViewById(R.id.editText_Coffee_1kg);
+        et_Coffee_250g = (EditText) findViewById(R.id.editText_Coffee_250g);
+        et_DripCoffee = (EditText) findViewById(R.id.editText_DripCoffee);
+        et_Exchenge = (EditText) findViewById(R.id.editText_Exchange);
+
+        sp_CH_Name = (Spinner) findViewById(R.id.spinner_CoffeeHouse);
+
+        iv_DiceBox_150 = (ImageView) findViewById(R.id.imageView_DiceBox_150);
+        iv_DiceBox_200 = (ImageView) findViewById(R.id.imageView_DiceBox_200);
+        iv_DiceBox_300 = (ImageView) findViewById(R.id.imageView_DiceBox_300);
+        iv_DiceBox_400 = (ImageView) findViewById(R.id.imageView_DiceBox_400);
+        iv_DiceBox_Sum = (ImageView) findViewById(R.id.imageView_DiceBox_Sum);
+        iv_Coffee_1kg = (ImageView) findViewById(R.id.imageView_Coffee_1kg);
+        iv_Coffee_250g = (ImageView) findViewById(R.id.imageView_Coffee_250g);
+        iv_DripCoffee = (ImageView) findViewById(R.id.imageView_DripCoffee);
+        iv_Exchenge = (ImageView) findViewById(R.id.imageView_Exchange);
+
         Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
         if (toolbar != null){
             setSupportActionBar (toolbar);
@@ -72,6 +103,7 @@ public class OpenShift extends AppCompatActivity{
         }
 
         InitializationSpinnerCoffeeHouse();
+        InitializationDateAndTime();
 
     }
 
@@ -98,20 +130,6 @@ public class OpenShift extends AppCompatActivity{
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void openShift(View view){
         Login = getIntent().getStringExtra("Login");
-        String S = "";
-
-        InitializationDateAndTime();
-
-        et_DiceBox_150 = (EditText) findViewById(R.id.editText_DiceBox_150);
-        et_DiceBox_200 = (EditText) findViewById(R.id.editText_DiceBox_200);
-        et_DiceBox_300 = (EditText) findViewById(R.id.editText_DiceBox_300);
-        et_DiceBox_400 = (EditText) findViewById(R.id.editText_DiceBox_400);
-        et_DiceBox_Sum = (EditText) findViewById(R.id.editText_DiceBox_Sum);
-        et_Coffee_1kg = (EditText) findViewById(R.id.editText_Coffee_1kg);
-        et_Coffee_250g = (EditText) findViewById(R.id.editText_Coffee_250g);
-        et_DripCoffee = (EditText) findViewById(R.id.editText_DripCoffee);
-        et_Exchenge = (EditText) findViewById(R.id.editText_Exchange);
-        sp_CH_Name = (Spinner) findViewById(R.id.spinner_CoffeeHouse);
 
         getID_CH();
         getShiftID();
@@ -142,6 +160,117 @@ public class OpenShift extends AppCompatActivity{
         }
     }
 
+    public void reviseStorage(View view) {
+
+        if (et_DiceBox_150.getText().toString().equals(S) ||
+                et_DiceBox_200.getText().toString().equals(S) ||
+                et_DiceBox_300.getText().toString().equals(S) ||
+                et_DiceBox_400.getText().toString().equals(S) ||
+                et_DiceBox_Sum.getText().toString().equals(S) ||
+                et_Coffee_1kg.getText().toString().equals(S) ||
+                et_Coffee_250g.getText().toString().equals(S) ||
+                et_DripCoffee.getText().toString().equals(S) ||
+                et_Exchenge.getText().toString().equals(S)) {
+            Toast.makeText(this, "Для возможности сверки заполните все поля", Toast.LENGTH_LONG).show();
+        } else {
+
+            getID_CH();
+
+            get_ID_Shift_BackDate();
+
+            inquiryGetStroageByDateCloseShift = new InquiryGetStroageByDateCloseShift();
+            inquiryGetStroageByDateCloseShift.start(ID_Shift_BackDate);
+            try {
+                inquiryGetStroageByDateCloseShift.join();
+            } catch (InterruptedException e) {
+                Log.e ("GetStroage", e.getMessage());
+            }
+            DiceBox_150 = inquiryGetStroageByDateCloseShift.resDiceBox_150_St();
+            DiceBox_200 = inquiryGetStroageByDateCloseShift.resDiceBox_200_St();
+            DiceBox_300 = inquiryGetStroageByDateCloseShift.resDiceBox_300_St();
+            DiceBox_400 = inquiryGetStroageByDateCloseShift.resDiceBox_400_St();
+            DiceBox_Sum = inquiryGetStroageByDateCloseShift.resDiceBox_Summer_St();
+            Coffee_1kg = inquiryGetStroageByDateCloseShift.resCoffee_1kg_St();
+            Coffee_250g = inquiryGetStroageByDateCloseShift.resCoffee_250g_St();
+            DripCoffee = inquiryGetStroageByDateCloseShift.resDripCoffee_St();
+            Exchenge = inquiryGetStroageByDateCloseShift.resExchange_St();
+
+            if (et_DiceBox_150.getText().toString().equals(DiceBox_150)) {
+                iv_DiceBox_150.setImageResource(R.mipmap.ic_check_black_18dp);
+
+            } else {
+                iv_DiceBox_150.setImageResource(R.mipmap.ic_close_black_18dp);
+            }
+
+            if (et_DiceBox_200.getText().toString().equals(DiceBox_200)){
+                iv_DiceBox_200.setImageResource(R.mipmap.ic_check_black_18dp);
+
+            } else {
+                iv_DiceBox_200.setImageResource(R.mipmap.ic_close_black_18dp);
+            }
+
+            if (et_DiceBox_300.getText().toString().equals(DiceBox_300)){
+                iv_DiceBox_300.setImageResource(R.mipmap.ic_check_black_18dp);
+
+            } else {
+                iv_DiceBox_300.setImageResource(R.mipmap.ic_close_black_18dp);
+            }
+
+            if (et_DiceBox_400.getText().toString().equals(DiceBox_400)){
+                iv_DiceBox_400.setImageResource(R.mipmap.ic_check_black_18dp);
+
+            } else {
+                iv_DiceBox_400.setImageResource(R.mipmap.ic_close_black_18dp);
+            }
+
+            if (et_DiceBox_Sum.getText().toString().equals(DiceBox_Sum)){
+                iv_DiceBox_Sum.setImageResource(R.mipmap.ic_check_black_18dp);
+
+            } else {
+                iv_DiceBox_Sum.setImageResource(R.mipmap.ic_close_black_18dp);
+            }
+
+            if (et_Coffee_1kg.getText().toString().equals(Coffee_1kg)){
+                iv_Coffee_1kg.setImageResource(R.mipmap.ic_check_black_18dp);
+
+            } else {
+                iv_Coffee_1kg.setImageResource(R.mipmap.ic_close_black_18dp);
+            }
+
+            if (et_Coffee_250g.getText().toString().equals(Coffee_250g)){
+                iv_Coffee_250g.setImageResource(R.mipmap.ic_check_black_18dp);
+
+            } else {
+                iv_Coffee_250g.setImageResource(R.mipmap.ic_close_black_18dp);
+            }
+
+            if (et_DripCoffee.getText().toString().equals(DripCoffee)){
+                iv_DripCoffee.setImageResource(R.mipmap.ic_check_black_18dp);
+
+            } else {
+                iv_DripCoffee.setImageResource(R.mipmap.ic_close_black_18dp);
+            }
+
+            if (et_Exchenge.getText().toString().equals(Exchenge)){
+                iv_Exchenge.setImageResource(R.mipmap.ic_check_black_18dp);
+
+            } else {
+                iv_Exchenge.setImageResource(R.mipmap.ic_close_black_18dp);
+            }
+        }
+    }
+
+    private void get_ID_Shift_BackDate() {
+        inquiryGetIDShiftByDateID_ch = new InquiryGetIDShiftByDateID_CH();
+        inquiryGetIDShiftByDateID_ch.start(DateBack1day,ID_CH);
+        try {
+            inquiryGetIDShiftByDateID_ch.join();
+        } catch (InterruptedException e) {
+            Log.e("GetIDShiftByDateID_CH", e.getMessage());
+        }
+        ID_Shift_BackDate = inquiryGetIDShiftByDateID_ch.resID_Shift();
+    }
+
     private void startWorkActivity() {
         Intent intent = new Intent(this,WorkActivity.class);
         intent.putExtra("Login",Login);
@@ -154,14 +283,14 @@ public class OpenShift extends AppCompatActivity{
 
     private void InitializationDateAndTime() {
         dateNow = new Date();
-        SimpleDateFormat formatForDateNow = new SimpleDateFormat("yyyy-M-dd");
+        SimpleDateFormat formatForDateNow = new SimpleDateFormat("yyyy-M-d");
         SimpleDateFormat formatForTimeNow = new SimpleDateFormat("hh:mm");
         Date = formatForDateNow.format(dateNow);
         Time = formatForTimeNow.format(dateNow);
 
         calendar = new GregorianCalendar();
         calendar.add(Calendar.DAY_OF_YEAR,-1);
-        DateDown1day = Integer.toString(calendar.get(Calendar.YEAR))+"-"+Integer.toString(calendar.get(Calendar.MONTH)+1)+"-"+Integer.toString(calendar.get(Calendar.DAY_OF_MONTH));
+        DateBack1day = Integer.toString(calendar.get(Calendar.YEAR))+"-"+Integer.toString(calendar.get(Calendar.MONTH)+1)+"-"+Integer.toString(calendar.get(Calendar.DAY_OF_MONTH));
     }
 
     private void addStorage() {

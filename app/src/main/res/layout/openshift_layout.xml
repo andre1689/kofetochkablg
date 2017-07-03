@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -46,15 +47,32 @@
                 android:layout_marginRight="30dp"
                 android:text="Стаканчики 150 мл:"
                 android:textSize="18sp" />
+            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
 
-            <EditText
-                android:id="@+id/editText_DiceBox_150"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="30dp"
-                android:layout_marginRight="30dp"
-                android:ems="10"
-                android:inputType="number" />
+                <EditText
+                    android:id="@+id/editText_DiceBox_150"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="30dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:inputType="number" />
+
+                <ImageView
+                    android:id="@+id/imageView_DiceBox_150"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginRight="30dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_weight="5"
+                    android:elevation="2dp" />
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/textView_DiceBox_200"
@@ -65,14 +83,31 @@
                 android:text="Стаканчики 200 мл:"
                 android:textSize="18sp" />
 
+            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
             <EditText
                 android:id="@+id/editText_DiceBox_200"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="30dp"
-                android:layout_marginRight="30dp"
+                android:layout_marginRight="10dp"
+                android:layout_weight="1"
                 android:ems="10"
                 android:inputType="number" />
+            <ImageView
+                android:id="@+id/imageView_DiceBox_200"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="5dp"
+                android:layout_marginRight="30dp"
+                android:layout_marginTop="5dp"
+                android:layout_weight="5"
+                android:elevation="2dp" />
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/textView_DiceBox_300"
@@ -83,14 +118,30 @@
                 android:text="Стаканчики 300 мл:"
                 android:textSize="18sp" />
 
+            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
             <EditText
                 android:id="@+id/editText_DiceBox_300"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="30dp"
-                android:layout_marginRight="30dp"
+                android:layout_marginRight="10dp"
+                android:layout_weight="1"
                 android:ems="10"
                 android:inputType="number" />
+            <ImageView
+                android:id="@+id/imageView_DiceBox_300"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="5dp"
+                android:layout_marginRight="30dp"
+                android:layout_marginTop="5dp"
+                android:layout_weight="5"
+                android:elevation="2dp" />
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/textView_DiceBox_400"
@@ -100,15 +151,30 @@
                 android:layout_marginRight="30dp"
                 android:text="Стаканчики 400 мл:"
                 android:textSize="18sp" />
-
+            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
             <EditText
                 android:id="@+id/editText_DiceBox_400"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="30dp"
-                android:layout_marginRight="30dp"
+                android:layout_marginRight="10dp"
+                android:layout_weight="1"
                 android:ems="10"
                 android:inputType="number" />
+            <ImageView
+                android:id="@+id/imageView_DiceBox_400"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="5dp"
+                android:layout_marginRight="30dp"
+                android:layout_marginTop="5dp"
+                android:layout_weight="5"
+                android:elevation="2dp" />
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/textView_DiceBox_Sum"
@@ -119,14 +185,32 @@
                 android:text="Стаканчики (лето):"
                 android:textSize="18sp" />
 
+            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
             <EditText
                 android:id="@+id/editText_DiceBox_Sum"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="30dp"
-                android:layout_marginRight="30dp"
+                android:layout_marginRight="10dp"
+                android:layout_weight="1"
                 android:ems="10"
                 android:inputType="number" />
+
+            <ImageView
+                android:id="@+id/imageView_DiceBox_Sum"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="5dp"
+                android:layout_marginRight="30dp"
+                android:layout_marginTop="5dp"
+                android:layout_weight="5"
+                android:elevation="2dp" />
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/textView_Coffee_1kg"
@@ -137,14 +221,31 @@
                 android:text="Кофе (зерно 1 кг):"
                 android:textSize="18sp" />
 
+            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
             <EditText
                 android:id="@+id/editText_Coffee_1kg"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="30dp"
-                android:layout_marginRight="30dp"
+                android:layout_marginRight="10dp"
+                android:layout_weight="1"
                 android:ems="10"
                 android:inputType="number" />
+
+            <ImageView
+                android:id="@+id/imageView_Coffee_1kg"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="5dp"
+                android:layout_marginRight="30dp"
+                android:layout_marginTop="5dp"
+                android:layout_weight="5"
+                android:elevation="2dp" />
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/textView_Coffee_250g"
@@ -155,14 +256,32 @@
                 android:text="Кофе (зерно 250 г):"
                 android:textSize="18sp" />
 
+            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
             <EditText
                 android:id="@+id/editText_Coffee_250g"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="30dp"
-                android:layout_marginRight="30dp"
+                android:layout_marginRight="10dp"
+                android:layout_weight="1"
                 android:ems="10"
                 android:inputType="number" />
+
+            <ImageView
+                android:id="@+id/imageView_Coffee_250g"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="5dp"
+                android:layout_marginRight="30dp"
+                android:layout_marginTop="5dp"
+                android:layout_weight="5"
+                android:elevation="2dp" />
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/textView_DripCoffee"
@@ -173,14 +292,32 @@
                 android:text="Drip кофе:"
                 android:textSize="18sp" />
 
+            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
             <EditText
                 android:id="@+id/editText_DripCoffee"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="30dp"
-                android:layout_marginRight="30dp"
+                android:layout_marginRight="10dp"
+                android:layout_weight="1"
                 android:ems="10"
                 android:inputType="number" />
+
+            <ImageView
+                android:id="@+id/imageView_DripCoffee"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="5dp"
+                android:layout_marginRight="30dp"
+                android:layout_marginTop="5dp"
+                android:layout_weight="5"
+                android:elevation="2dp" />
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/textView_Exchange"
@@ -191,14 +328,42 @@
                 android:text="Размен:"
                 android:textSize="18sp" />
 
+            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
             <EditText
                 android:id="@+id/editText_Exchange"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="30dp"
-                android:layout_marginRight="30dp"
+                android:layout_marginRight="10dp"
+                android:layout_weight="1"
                 android:ems="10"
                 android:inputType="number" />
+            <ImageView
+                android:id="@+id/imageView_Exchange"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="5dp"
+                android:layout_marginRight="30dp"
+                android:layout_marginTop="5dp"
+                android:layout_weight="5"
+                android:elevation="2dp" />
+
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/button_BackShift"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="50dp"
+                android:layout_marginRight="50dp"
+                android:layout_marginTop="30dp"
+                android:onClick="reviseStorage"
+                android:text="Сверить с прошлой сменой" />
 
             <Button
                 android:id="@+id/button_OpenShift"
