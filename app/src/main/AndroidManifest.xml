@@ -29,6 +29,10 @@
 
         </activity>
 
+        <activity android:name=".NewOrderActivity">
+
+        </activity>
+
     </application>
 
     <uses-permission android:name="android.permission.INTERNET" />
