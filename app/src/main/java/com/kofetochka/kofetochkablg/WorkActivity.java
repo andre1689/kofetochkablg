@@ -116,4 +116,9 @@ public class WorkActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    public void openNewOrderActivity (View view){
+        Intent intent = new Intent(this, NewOrderActivity.class);
+        startActivity(intent);
+    }
+
 }
