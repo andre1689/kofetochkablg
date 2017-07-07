@@ -16,7 +16,29 @@
         android:textSize="18sp" />
 
     <ListView
-        android:id="@+id/listView"
+        android:id="@+id/listView_Name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/textView_Volume"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Выберите объем напитка:" />
+
+    <ListView
+        android:id="@+id/listView_Volume"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/textView_Additives"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Добавки:" />
+
+    <ListView
+        android:id="@+id/listView_Additive"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
