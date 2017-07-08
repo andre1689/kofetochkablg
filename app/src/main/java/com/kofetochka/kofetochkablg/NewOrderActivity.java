@@ -18,6 +18,7 @@ import com.kofetochka.inquiry.InquiryGetArrayNameAdditives;
 import com.kofetochka.inquiry.InquiryGetArrayNameDrink;
 import com.kofetochka.inquiry.InquiryGetArrayNameSyrup;
 import com.kofetochka.inquiry.InquiryGetArrayVolumeDrink;
+import com.kofetochka.inquiry.InquiryGetPriceDrink;
 
 public class NewOrderActivity extends AppCompatActivity{
 
@@ -31,6 +32,7 @@ public class NewOrderActivity extends AppCompatActivity{
     private String SelectNameDrink;
     private String SelectVolumeDrink;
     private String SelectSyrup;
+    private String PriceDrink;
 
     String[] arrayName_Drink;
     String[] arrayOneName_Drink;
@@ -41,12 +43,13 @@ public class NewOrderActivity extends AppCompatActivity{
     String[] arrayNameSyrup;
     ListView lv_NameDrink, lv_VolumeDrink, lv_Additives, lv_Syrup;
     Switch switch_additives, switch_Syrup;
+    TextView tv_PriceDrink2;
 
     InquiryGetArrayNameDrink inquiryGetArrayNameDrink;
     InquiryGetArrayVolumeDrink inquiryGetArrayVolumeDrink;
     InquiryGetArrayNameAdditives inquiryGetArrayNameAdditives;
     InquiryGetArrayNameSyrup inquiryGetArrayNameSyrup;
-
+    InquiryGetPriceDrink inquiryGetPriceDrink;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,6 +61,7 @@ public class NewOrderActivity extends AppCompatActivity{
         lv_Syrup = (ListView) findViewById(R.id.listView_Syrup);
         switch_additives = (Switch) findViewById(R.id.switch_Additives);
         switch_Syrup = (Switch) findViewById(R.id.switch_Syrup);
+        tv_PriceDrink2 = (TextView) findViewById(R.id.textView_PriceDrink2);
 
         Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
         if (toolbar != null){
@@ -77,9 +81,16 @@ public class NewOrderActivity extends AppCompatActivity{
                     arrayOneName_Drink = new String[]{SelectNameDrink};
                     FillingListViewNameDrink(arrayOneName_Drink);
                     getArrayVolumeDrink();
+
+                    if(v==1){
+                        SelectVolumeDrink = arrayVolume_Drink[0].toString();
+                        getPriceDrink();
+                        tv_PriceDrink2.setText(PriceDrink);
+                    }
                 } else {
                     SelectNameDrink = null;
                     FillingListViewNameDrink(arrayName_Drink);
+                    tv_PriceDrink2.setText("0");
                 }
             }
         });
@@ -91,9 +102,12 @@ public class NewOrderActivity extends AppCompatActivity{
                     SelectVolumeDrink = ((TextView)view).getText().toString();
                     arrayOneVolume_Drink = new String[]{SelectVolumeDrink};
                     FillingListViewVolumeDrink(arrayOneVolume_Drink);
+                    getPriceDrink();
+                    tv_PriceDrink2.setText(PriceDrink);
                 } else {
                     SelectVolumeDrink = null;
                     FillingListViewVolumeDrink(arrayVolume_Drink);
+                    tv_PriceDrink2.setText("0");
                 }
             }
         });
@@ -137,6 +151,17 @@ public class NewOrderActivity extends AppCompatActivity{
                 }
             }
         });
+    }
+
+    private void getPriceDrink() {
+        inquiryGetPriceDrink = new InquiryGetPriceDrink();
+        inquiryGetPriceDrink.start(SelectNameDrink,SelectVolumeDrink);
+        try {
+            inquiryGetPriceDrink.join();
+        } catch (InterruptedException e) {
+            Log.e("GetPriceDrink",e.getMessage());
+        }
+        PriceDrink = inquiryGetPriceDrink.resPrice_Drink();
     }
 
 

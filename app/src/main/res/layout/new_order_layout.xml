@@ -25,15 +25,11 @@
             android:layout_marginRight="30dp"
             android:text="Выберите напиток:"
             android:textSize="18sp" />
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+
         <ListView
             android:id="@+id/listView_Name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
-            </LinearLayout>
 
         <TextView
             android:id="@+id/textView_Volume"
@@ -42,15 +38,37 @@
             android:layout_marginLeft="30dp"
             android:layout_marginRight="30dp"
             android:layout_marginTop="30dp"
+            android:textSize="18sp"
             android:text="Выберите объем напитка:"
-            android:textSize="18sp" />
+ />
 
         <ListView
             android:id="@+id/listView_Volume"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
         <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:tools="http://schemas.android.com/tools"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/textView_PriceDrink"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="10dp"
+                android:text="Цена за напиток:"
+                android:textSize="30sp" />
+
+            <TextView
+                android:id="@+id/textView_PriceDrink2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="30dp"
+                android:textSize="30sp" />
+        </LinearLayout>
+
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="horizontal">
