@@ -5,9 +5,11 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.util.SparseBooleanArray;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.CheckedTextView;
 import android.widget.CompoundButton;
 import android.widget.ListView;
 import android.widget.Switch;
@@ -18,6 +20,7 @@ import com.kofetochka.inquiry.InquiryGetArrayNameAdditives;
 import com.kofetochka.inquiry.InquiryGetArrayNameDrink;
 import com.kofetochka.inquiry.InquiryGetArrayNameSyrup;
 import com.kofetochka.inquiry.InquiryGetArrayVolumeDrink;
+import com.kofetochka.inquiry.InquiryGetPriceAdditives;
 import com.kofetochka.inquiry.InquiryGetPriceDrink;
 
 public class NewOrderActivity extends AppCompatActivity{
@@ -29,6 +32,8 @@ public class NewOrderActivity extends AppCompatActivity{
     private int v, V;
     private int a, A;
     private int s, S;
+    private int choise;
+    private int Summ = 0;
     private String SelectNameDrink;
     private String SelectVolumeDrink;
     private String SelectSyrup;
@@ -41,15 +46,17 @@ public class NewOrderActivity extends AppCompatActivity{
     String[] arrayOneSyrup;
     String[] arrayNameAdditives;
     String[] arrayNameSyrup;
+    String[] arrayCheckedNameAdditives;
     ListView lv_NameDrink, lv_VolumeDrink, lv_Additives, lv_Syrup;
     Switch switch_additives, switch_Syrup;
-    TextView tv_PriceDrink2;
+    TextView tv_PriceDrink2, tv_PriceAdditives2;
 
     InquiryGetArrayNameDrink inquiryGetArrayNameDrink;
     InquiryGetArrayVolumeDrink inquiryGetArrayVolumeDrink;
     InquiryGetArrayNameAdditives inquiryGetArrayNameAdditives;
     InquiryGetArrayNameSyrup inquiryGetArrayNameSyrup;
     InquiryGetPriceDrink inquiryGetPriceDrink;
+    InquiryGetPriceAdditives inquiryGetPriceAdditives;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,6 +69,7 @@ public class NewOrderActivity extends AppCompatActivity{
         switch_additives = (Switch) findViewById(R.id.switch_Additives);
         switch_Syrup = (Switch) findViewById(R.id.switch_Syrup);
         tv_PriceDrink2 = (TextView) findViewById(R.id.textView_PriceDrink2);
+        tv_PriceAdditives2 = (TextView) findViewById(R.id.textView_PriceAdditives2);
 
         Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
         if (toolbar != null){
@@ -112,6 +120,30 @@ public class NewOrderActivity extends AppCompatActivity{
             }
         });
 
+        lv_Additives.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                choise = lv_Additives.getCount();
+                Summ = 0;
+                arrayCheckedNameAdditives = new String[choise];
+                SparseBooleanArray sparseBooleanArray = lv_Additives.getCheckedItemPositions();
+                for (int i = 0; i < choise; i++) {
+                    if (sparseBooleanArray.get(i) == true) {
+                        inquiryGetPriceAdditives = new InquiryGetPriceAdditives();
+                        inquiryGetPriceAdditives.start(lv_Additives.getItemAtPosition(i).toString());
+                        try {
+                            inquiryGetPriceAdditives.join();
+                        } catch (InterruptedException e) {
+                            Log.e("GetPriceAdditives",e.getMessage());
+                        }
+                        Summ += Integer.parseInt(inquiryGetPriceAdditives.resPrice_Additives());
+                    }
+                    tv_PriceAdditives2.setText(Integer.toString(Summ));
+                }
+
+            }
+        });
+
         switch_additives.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -121,6 +153,7 @@ public class NewOrderActivity extends AppCompatActivity{
                 } else {
                     arrayNameAdditives = new String[0];
                     FillingListViewNameAdditives(arrayNameAdditives);
+                    tv_PriceAdditives2.setText("0");
                 }
             }
         });
