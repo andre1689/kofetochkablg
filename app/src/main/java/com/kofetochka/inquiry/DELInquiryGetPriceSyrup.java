@@ -21,9 +21,9 @@ import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 
-public class InquiryGetPriceAdditives extends Thread{
-    private String Name_Additives;
-    private String Price_Additives;
+public class DELInquiryGetPriceSyrup extends Thread{
+    private String Name_Syrup;
+    private String Price_Syrup;
 
     private String Result = null;
     private String Line = null;
@@ -31,10 +31,10 @@ public class InquiryGetPriceAdditives extends Thread{
 
     public void run(){
         ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-        nameValuePairs.add(new BasicNameValuePair("Name_Additives",Name_Additives));
+        nameValuePairs.add(new BasicNameValuePair("Name_Syrup",Name_Syrup));
         try {
             HttpClient httpClient = new DefaultHttpClient();
-            HttpPost httpPost = new HttpPost("http://146143.simplecloud.club/kofetochkablg/get_price_additives.php");
+            HttpPost httpPost = new HttpPost("http://146143.simplecloud.club/kofetochkablg/get_price_syrup.php");
             httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs,"UTF-8"));
             HttpResponse httpResponse = httpClient.execute(httpPost);
             HttpEntity httpEntity = httpResponse.getEntity();
@@ -65,19 +65,19 @@ public class InquiryGetPriceAdditives extends Thread{
 
         try {
             JSONObject json_data  = new JSONObject(Result);
-            Price_Additives = (json_data.getString("Price_Additives"));
+            Price_Syrup = (json_data.getString("Price_Syrup"));
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
     }
 
-    public void start (String name_Additives){
-        this.Name_Additives = name_Additives;
+    public void start (String name_Syrup){
+        this.Name_Syrup = name_Syrup;
         this.start();
     }
 
-    public String resPrice_Additives (){
-        return Price_Additives;
+    public String resPrice_Syrup (){
+        return Price_Syrup;
     }
 }

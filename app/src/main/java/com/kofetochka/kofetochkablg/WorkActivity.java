@@ -98,8 +98,6 @@ public class WorkActivity extends AppCompatActivity {
                                 intent.putExtra("NameRole",NameRole);
                                 intent.putExtra("Surname", Surname);
                                 intent.putExtra("Name", Name);
-                                //intent.putExtra("ID_Shift", ID_Shift);
-                                //intent.putExtra("Name_CH", Name_CH);
                                 startActivity(intent);
                             }
                         }
@@ -118,6 +116,7 @@ public class WorkActivity extends AppCompatActivity {
 
     public void openNewOrderActivity (View view){
         Intent intent = new Intent(this, NewOrderActivity.class);
+        intent.putExtra("Login",Login);
         startActivity(intent);
     }
 

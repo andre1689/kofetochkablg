@@ -7,157 +7,274 @@
         android:id="@+id/toolbar"
         layout="@layout/toolbar"/>
 
-    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    <ScrollView
         android:id="@+id/scroll"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:visibility="visible">
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/textView_Name_Drink"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="30dp"
-            android:layout_marginRight="30dp"
-            android:text="Выберите напиток:"
-            android:textSize="18sp" />
-
-        <ListView
-            android:id="@+id/listView_Name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-        <TextView
-            android:id="@+id/textView_Volume"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="30dp"
-            android:layout_marginRight="30dp"
-            android:layout_marginTop="30dp"
-            android:textSize="18sp"
-            android:text="Выберите объем напитка:"
- />
-
-        <ListView
-            android:id="@+id/listView_Volume"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="horizontal">
+            android:orientation="vertical">
 
             <TextView
-                android:id="@+id/textView_PriceDrink"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="30dp"
-                android:layout_marginRight="10dp"
-                android:text="Цена за напиток:"
-                android:textSize="30sp" />
-
-            <TextView
-                android:id="@+id/textView_PriceDrink2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="30dp"
-                android:text="0"
-                android:textSize="30sp" />
-        </LinearLayout>
-
-        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/textView_Additives"
+                android:id="@+id/textView_Name_Drink"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="30dp"
                 android:layout_marginRight="30dp"
-                android:layout_marginTop="30dp"
-                android:layout_weight="1"
-                android:text="Добавки:"
+                android:text="Выберите напиток:"
                 android:textSize="18sp" />
 
-            <Switch
-                android:id="@+id/switch_Additives"
+            <ListView
+                android:id="@+id/listView_Name"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginRight="30dp"
-                android:layout_marginTop="30dp"
-                android:layout_weight="2"
-                android:checked="false"
-                android:splitTrack="false" />
-
-        </LinearLayout>
-
-        <ListView
-            android:id="@+id/listView_Additives"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:choiceMode="multipleChoice" />
-
-        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal">
+                android:layout_height="wrap_content" />
 
             <TextView
-                android:id="@+id/textView_PriceAdditives"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="30dp"
-                android:layout_marginRight="10dp"
-                android:text="Цена за добавки:"
-                android:textSize="30sp" />
-
-            <TextView
-                android:id="@+id/textView_PriceAdditives2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="30dp"
-                android:text="0"
-                android:textSize="30sp" />
-        </LinearLayout>
-
-        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/textView_Syrup"
+                android:id="@+id/textView_Volume"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="30dp"
                 android:layout_marginRight="30dp"
                 android:layout_marginTop="30dp"
-                android:layout_weight="1"
-                android:text="Сиропы:"
+                android:text="Выберите объем напитка:"
                 android:textSize="18sp" />
 
-            <Switch
-                android:id="@+id/switch_Syrup"
+            <ListView
+                android:id="@+id/listView_Volume"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/tv_line1"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
+                android:background="@color/md_black_1000"/>
+
+            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginRight="30dp"
-                android:layout_marginTop="30dp"
-                android:layout_weight="2"
-                android:checked="false"
-                android:splitTrack="false" />
-        </LinearLayout>
+                android:orientation="horizontal">
 
-        <ListView
-            android:id="@+id/listView_Syrup"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-    </LinearLayout>
+                <TextView
+                    android:id="@+id/textView_PriceDrink"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="30dp"
+                    android:layout_marginRight="10dp"
+                    android:text="Цена напитка:"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:id="@+id/textView_PriceDrink2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
+                    android:text="0"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:id="@+id/textView_PriceDrink3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="30dp"
+                    android:text="руб."
+                    android:textSize="20sp" />
+            </LinearLayout>
+
+            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/textView_Additives"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="30dp"
+                    android:layout_marginRight="30dp"
+                    android:layout_marginTop="30dp"
+                    android:layout_weight="1"
+                    android:text="Добавки:"
+                    android:textSize="18sp" />
+
+                <Switch
+                    android:id="@+id/switch_Additives"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginRight="30dp"
+                    android:layout_marginTop="30dp"
+                    android:layout_weight="2"
+                    android:checked="false"
+                    android:splitTrack="false" />
+
+            </LinearLayout>
+
+            <ListView
+                android:id="@+id/listView_Additives"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:choiceMode="multipleChoice" />
+
+            <TextView
+                android:id="@+id/tv_line2"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
+                android:background="@color/md_black_1000"/>
+
+            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/textView_PriceAdditives"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="30dp"
+                    android:layout_marginRight="10dp"
+                    android:text="Цена добавки:"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:id="@+id/textView_PriceAdditives2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
+                    android:text="0"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:id="@+id/textView_PriceAdditives3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="30dp"
+                    android:text="руб."
+                    android:textSize="20sp" />
+            </LinearLayout>
+
+            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/textView_Syrup"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="30dp"
+                    android:layout_marginRight="30dp"
+                    android:layout_marginTop="30dp"
+                    android:layout_weight="1"
+                    android:text="Сиропы:"
+                    android:textSize="18sp" />
+
+                <Switch
+                    android:id="@+id/switch_Syrup"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginRight="30dp"
+                    android:layout_marginTop="30dp"
+                    android:layout_weight="2"
+                    android:checked="false"
+                    android:splitTrack="false" />
+            </LinearLayout>
+
+            <ListView
+                android:id="@+id/listView_Syrup"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <TextView
+                android:id="@+id/tv_line3"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
+                android:background="@color/md_black_1000"/>
+
+            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="10dp"
+                android:layout_marginEnd="10dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/textView_PriceSyrup"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="30dp"
+                    android:layout_marginRight="10dp"
+                    android:text="Цена сиропа:"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:id="@+id/textView_PriceSyrup2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
+                    android:text="0"
+                    android:textSize="20sp" />
+                <TextView
+                    android:id="@+id/textView_PriceSyrup3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="30dp"
+                    android:text="руб."
+                    android:textSize="20sp" />
+            </LinearLayout>
+            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/textView_PriceSumm"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="30dp"
+                    android:layout_marginRight="10dp"
+                    android:text="Итого:"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:id="@+id/textView_PriceSumm2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
+                    android:text="0"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:id="@+id/textView_PriceSumm3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="30dp"
+                    android:text="руб."
+                    android:textSize="20sp" />
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/button_Add"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:gravity="bottom"
+                android:onClick="addApplication"
+                android:text="Добавить" />
+        </LinearLayout>
     </ScrollView>
 
 </LinearLayout>

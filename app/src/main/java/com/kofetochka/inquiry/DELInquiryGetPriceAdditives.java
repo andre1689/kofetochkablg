@@ -21,10 +21,9 @@ import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 
-public class InquiryGetPriceDrink extends Thread{
-    private String Name_Drink;
-    private String Volume_Drink;
-    private String Price_Drink;
+public class DELInquiryGetPriceAdditives extends Thread{
+    private String Name_Additives;
+    private String Price_Additives;
 
     private String Result = null;
     private String Line = null;
@@ -32,11 +31,10 @@ public class InquiryGetPriceDrink extends Thread{
 
     public void run(){
         ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-        nameValuePairs.add(new BasicNameValuePair("Name_Drink",Name_Drink));
-        nameValuePairs.add(new BasicNameValuePair("Volume_Drink",Volume_Drink));
+        nameValuePairs.add(new BasicNameValuePair("Name_Additives",Name_Additives));
         try {
             HttpClient httpClient = new DefaultHttpClient();
-            HttpPost httpPost = new HttpPost("http://146143.simplecloud.club/kofetochkablg/get_price_drink.php");
+            HttpPost httpPost = new HttpPost("http://146143.simplecloud.club/kofetochkablg/get_price_additives.php");
             httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs,"UTF-8"));
             HttpResponse httpResponse = httpClient.execute(httpPost);
             HttpEntity httpEntity = httpResponse.getEntity();
@@ -67,20 +65,19 @@ public class InquiryGetPriceDrink extends Thread{
 
         try {
             JSONObject json_data  = new JSONObject(Result);
-            Price_Drink = (json_data.getString("Price_Drink"));
+            Price_Additives = (json_data.getString("Price_Additives"));
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
     }
 
-    public void start (String name_Drink, String volume_Drink){
-        this.Name_Drink = name_Drink;
-        this.Volume_Drink = volume_Drink;
+    public void start (String name_Additives){
+        this.Name_Additives = name_Additives;
         this.start();
     }
 
-    public String resPrice_Drink (){
-        return Price_Drink;
+    public String resPrice_Additives (){
+        return Price_Additives;
     }
 }

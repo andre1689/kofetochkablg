@@ -9,19 +9,22 @@ import android.util.SparseBooleanArray;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.CheckedTextView;
 import android.widget.CompoundButton;
 import android.widget.ListView;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.kofetochka.inquiry.InquiryAdd;
 import com.kofetochka.inquiry.InquiryGetArrayNameAdditives;
 import com.kofetochka.inquiry.InquiryGetArrayNameDrink;
 import com.kofetochka.inquiry.InquiryGetArrayNameSyrup;
 import com.kofetochka.inquiry.InquiryGetArrayVolumeDrink;
-import com.kofetochka.inquiry.InquiryGetPriceAdditives;
-import com.kofetochka.inquiry.InquiryGetPriceDrink;
+import com.kofetochka.inquiry.InquiryGetOneRes;
+import com.kofetochka.inquiry.InquiryGetShiftID_ID_CH;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class NewOrderActivity extends AppCompatActivity{
 
@@ -36,31 +39,35 @@ public class NewOrderActivity extends AppCompatActivity{
     private int Summ = 0;
     private String SelectNameDrink;
     private String SelectVolumeDrink;
-    private String SelectSyrup;
+    private String SelectSyrup = null;
     private String PriceDrink;
+    private String Date;
+    private String Login;
+    private String ID_Shift;
+    private String Season;
 
-    String[] arrayName_Drink;
-    String[] arrayOneName_Drink;
-    String[] arrayVolume_Drink;
-    String[] arrayOneVolume_Drink;
-    String[] arrayOneSyrup;
-    String[] arrayNameAdditives;
-    String[] arrayNameSyrup;
-    String[] arrayCheckedNameAdditives;
+    String[] arrayName_Drink, arrayOneName_Drink, arrayVolume_Drink, arrayOneVolume_Drink, arrayOneSyrup, arrayNameAdditives, arrayNameSyrup, arrayCheckedNameAdditives;
     ListView lv_NameDrink, lv_VolumeDrink, lv_Additives, lv_Syrup;
     Switch switch_additives, switch_Syrup;
-    TextView tv_PriceDrink2, tv_PriceAdditives2;
+    TextView tv_PriceDrink2, tv_PriceAdditives2, tv_PriceSyrup2, tv_PriceSumm2;
+    Date dateNow;
 
     InquiryGetArrayNameDrink inquiryGetArrayNameDrink;
     InquiryGetArrayVolumeDrink inquiryGetArrayVolumeDrink;
     InquiryGetArrayNameAdditives inquiryGetArrayNameAdditives;
     InquiryGetArrayNameSyrup inquiryGetArrayNameSyrup;
-    InquiryGetPriceDrink inquiryGetPriceDrink;
-    InquiryGetPriceAdditives inquiryGetPriceAdditives;
+    InquiryGetShiftID_ID_CH inquiryGetShiftID_id_ch;
+    InquiryAdd inquiryAdd;
+    InquiryGetOneRes inquiryGetOneRes;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.new_order_layout);
+
+        InitializationDate();
+        Login = getIntent().getStringExtra("Login");
+
+        arrayCheckedNameAdditives = new String[0];
 
         lv_NameDrink = (ListView) findViewById(R.id.listView_Name);
         lv_VolumeDrink = (ListView) findViewById(R.id.listView_Volume);
@@ -70,35 +77,43 @@ public class NewOrderActivity extends AppCompatActivity{
         switch_Syrup = (Switch) findViewById(R.id.switch_Syrup);
         tv_PriceDrink2 = (TextView) findViewById(R.id.textView_PriceDrink2);
         tv_PriceAdditives2 = (TextView) findViewById(R.id.textView_PriceAdditives2);
+        tv_PriceSyrup2 = (TextView) findViewById(R.id.textView_PriceSyrup2);
+        tv_PriceSumm2 = (TextView) findViewById(R.id.textView_PriceSumm2);
 
         Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
         if (toolbar != null){
             setSupportActionBar (toolbar);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
-
+        //Узнаем какой сезон устанвлен в настройках
+        getSeason();
+        //Получаем массив напитков
         getArrayNameDrink();
-        String[] Str = new String[0];
+        //Заполняем ListView полученным массивом напитков
         FillingListViewNameDrink(arrayName_Drink);
-
+        //Обрабочик выбора напитка
         lv_NameDrink.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                //если больше 1 напитка, выбираем нажатый
                 if (L>1) {
                     SelectNameDrink = ((TextView) view).getText().toString();
                     arrayOneName_Drink = new String[]{SelectNameDrink};
                     FillingListViewNameDrink(arrayOneName_Drink);
                     getArrayVolumeDrink();
-
+                    //если объем только один
                     if(v==1){
                         SelectVolumeDrink = arrayVolume_Drink[0].toString();
-                        getPriceDrink();
-                        tv_PriceDrink2.setText(PriceDrink);
+                        getPriceDrink(); //получаем цену выбранного напитка
+                        tv_PriceDrink2.setText(PriceDrink);//устнавливаем цену в TextView
+                        setSumm(); //Суммирум в общую сумму
                     }
+                    //если напиток выбран и его нужно изменить
                 } else {
                     SelectNameDrink = null;
                     FillingListViewNameDrink(arrayName_Drink);
                     tv_PriceDrink2.setText("0");
+                    setSumm();
                 }
             }
         });
@@ -112,10 +127,12 @@ public class NewOrderActivity extends AppCompatActivity{
                     FillingListViewVolumeDrink(arrayOneVolume_Drink);
                     getPriceDrink();
                     tv_PriceDrink2.setText(PriceDrink);
+                    setSumm();
                 } else {
                     SelectVolumeDrink = null;
                     FillingListViewVolumeDrink(arrayVolume_Drink);
                     tv_PriceDrink2.setText("0");
+                    setSumm();
                 }
             }
         });
@@ -129,16 +146,20 @@ public class NewOrderActivity extends AppCompatActivity{
                 SparseBooleanArray sparseBooleanArray = lv_Additives.getCheckedItemPositions();
                 for (int i = 0; i < choise; i++) {
                     if (sparseBooleanArray.get(i) == true) {
-                        inquiryGetPriceAdditives = new InquiryGetPriceAdditives();
-                        inquiryGetPriceAdditives.start(lv_Additives.getItemAtPosition(i).toString());
+                        arrayCheckedNameAdditives[i] = lv_Additives.getItemAtPosition(i).toString();
+                        String ColumnAdditives = "Price_Additives";
+                        String QuiryAdditives = "SELECT "+ColumnAdditives+" FROM Additives WHERE Name_Additives='"+lv_Additives.getItemAtPosition(i).toString()+"'";
+                        inquiryGetOneRes = new InquiryGetOneRes();
+                        inquiryGetOneRes.start(QuiryAdditives,ColumnAdditives);
                         try {
-                            inquiryGetPriceAdditives.join();
+                            inquiryGetOneRes.join();
                         } catch (InterruptedException e) {
                             Log.e("GetPriceAdditives",e.getMessage());
                         }
-                        Summ += Integer.parseInt(inquiryGetPriceAdditives.resPrice_Additives());
+                        Summ += Integer.parseInt(inquiryGetOneRes.res());
                     }
                     tv_PriceAdditives2.setText(Integer.toString(Summ));
+                    setSumm();
                 }
 
             }
@@ -154,6 +175,7 @@ public class NewOrderActivity extends AppCompatActivity{
                     arrayNameAdditives = new String[0];
                     FillingListViewNameAdditives(arrayNameAdditives);
                     tv_PriceAdditives2.setText("0");
+                    setSumm();
                 }
             }
         });
@@ -167,6 +189,8 @@ public class NewOrderActivity extends AppCompatActivity{
                 }else {
                     arrayNameSyrup = new String[0];
                     FillingListViewNameSyrup(arrayNameSyrup);
+                    tv_PriceSyrup2.setText("0");
+                    setSumm();
                 }
             }
         });
@@ -178,26 +202,60 @@ public class NewOrderActivity extends AppCompatActivity{
                     SelectSyrup = ((TextView)view).getText().toString();
                     arrayOneSyrup = new String[]{SelectSyrup};
                     FillingListViewNameSyrup(arrayOneSyrup);
+                    String ColmunSyrup = "Price_Syrup";
+                    String QuirySyrup = "SELECT "+ColmunSyrup+" FROM Syrup WHERE Name_Syrup='"+SelectSyrup+"'";
+                    inquiryGetOneRes = new InquiryGetOneRes();
+                    inquiryGetOneRes.start(QuirySyrup,ColmunSyrup);
+                    try {
+                        inquiryGetOneRes.join();
+                    } catch (InterruptedException e) {
+                        Log.e("GetPriseSyrup",e.getMessage());
+                    }
+                    tv_PriceSyrup2.setText(inquiryGetOneRes.res());
+                    setSumm();
                 } else {
                     SelectSyrup = null;
                     FillingListViewNameSyrup(arrayNameSyrup);
+                    tv_PriceSyrup2.setText("0");
+                    setSumm();
                 }
             }
         });
     }
 
-    private void getPriceDrink() {
-        inquiryGetPriceDrink = new InquiryGetPriceDrink();
-        inquiryGetPriceDrink.start(SelectNameDrink,SelectVolumeDrink);
+    private void getSeason() {
+        String ColumnSeason = "Season";
+        String QuirySeason = "SELECT Season FROM Settings";
+        inquiryGetOneRes = new InquiryGetOneRes();
+        inquiryGetOneRes.start(QuirySeason, ColumnSeason);
         try {
-            inquiryGetPriceDrink.join();
+            inquiryGetOneRes.join();
         } catch (InterruptedException e) {
-            Log.e("GetPriceDrink",e.getMessage());
+            Log.e("GetSeason",e.getMessage());
         }
-        PriceDrink = inquiryGetPriceDrink.resPrice_Drink();
+        Season = inquiryGetOneRes.res();
+    }
+    private void InitializationDate() {
+        dateNow = new Date();
+        SimpleDateFormat formatForDateNow = new SimpleDateFormat("yyyy-M-d");
+        Date = formatForDateNow.format(dateNow);
+    }
+    private void setSumm() {
+        tv_PriceSumm2.setText(Integer.toString(Integer.parseInt(tv_PriceDrink2.getText().toString())+Integer.parseInt(tv_PriceAdditives2.getText().toString())+Integer.parseInt(tv_PriceSyrup2.getText().toString())));
     }
 
-
+    private void getPriceDrink() {
+        String ColumnPriceDrink = "Price_Drink";
+        String QuiryPriceDrink = "SELECT " + ColumnPriceDrink + " FROM Drink WHERE (Name_Drink='" + SelectNameDrink + "') AND (Volume_Drink='" + SelectVolumeDrink + "')";
+        inquiryGetOneRes = new InquiryGetOneRes();
+        inquiryGetOneRes.start(QuiryPriceDrink, ColumnPriceDrink);
+        try {
+            inquiryGetOneRes.join();
+        } catch (InterruptedException e) {
+            Log.e("GetPriceDrink", e.getMessage());
+        }
+        PriceDrink = inquiryGetOneRes.res();
+    }
     private void getArrayNameSyrup() {
         inquiryGetArrayNameSyrup = new InquiryGetArrayNameSyrup();
         inquiryGetArrayNameSyrup.start(TABLE_SYRUP);
@@ -224,7 +282,7 @@ public class NewOrderActivity extends AppCompatActivity{
     }
     private void getArrayNameDrink() {
         inquiryGetArrayNameDrink = new InquiryGetArrayNameDrink();
-        inquiryGetArrayNameDrink.start(TABLE_DRINK);
+        inquiryGetArrayNameDrink.start(TABLE_DRINK, Season);
         try {
             inquiryGetArrayNameDrink.join();
         } catch (InterruptedException e) {
@@ -271,5 +329,141 @@ public class NewOrderActivity extends AppCompatActivity{
         ArrayAdapter<String> adapter_syrup = new ArrayAdapter<>(this, R.layout.list_item, arrayname_syrup);
         lv_Syrup.setAdapter(adapter_syrup);
         Utility.setListViewHeightBasedOnChildren(lv_Syrup);
+    }
+
+    public void addApplication (View view){
+        getID_Shift_ID_CH();
+        String ID_AP;
+        String ID_Application;
+
+        //Получение максимального значения ID_Application
+        String ColumnMaxApplication = "ID_Application";
+        String QueryMaxApplication = "SELECT MAX("+ColumnMaxApplication+") AS "+ColumnMaxApplication+" FROM Application";
+        inquiryGetOneRes = new InquiryGetOneRes();
+        inquiryGetOneRes.start(QueryMaxApplication,ColumnMaxApplication);
+        try {
+            inquiryGetOneRes.join();
+        } catch (InterruptedException e) {
+            Log.e("GetOneRes",e.getMessage());
+        }
+        //Добавляем запись в таблицу Application
+        if (inquiryGetOneRes.res()=="null"){ //если таблица Application пустая
+            ID_Application = "1";
+            String TableApplication = "Application";
+            String ColumnApplication = "(`ID_Application`, `ID_Shift`)";
+            String ValuesApplication = "('" + ID_Application + "', '" + ID_Shift + "')";
+            AddEntry(TableApplication, ColumnApplication, ValuesApplication);
+        } else { //если в таблице Application есть записи
+            int Apllication = Integer.parseInt(inquiryGetOneRes.res()) + 1;
+            ID_Application = Integer.toString(Apllication);
+            String TableApplication = "Application";
+            String ColumnApplication = "(`ID_Application`, `ID_Shift`)";
+            String ValuesApplication = "('" + ID_Application + "', '" + ID_Shift + "')";
+            AddEntry(TableApplication, ColumnApplication, ValuesApplication);
+        }
+
+        //Получение значения ID_Drink
+        String ColumnID_Drink = "ID_Drink";
+        String QueryID_Drink = "SELECT "+ColumnID_Drink+" FROM Drink WHERE (Name_Drink='"+SelectNameDrink+"') AND (Volume_Drink='"+SelectVolumeDrink+"')";
+        inquiryGetOneRes = new InquiryGetOneRes();
+        inquiryGetOneRes.start(QueryID_Drink,ColumnID_Drink);
+        try {
+            inquiryGetOneRes.join();
+        } catch (InterruptedException e) {
+            Log.e("Select ID_Drink",e.getMessage());
+        }
+        String ID_Drink = inquiryGetOneRes.res();
+
+        //Получение максимального значения ID_AP
+        String ColumnMaxApplicationPart = "ID_AP";
+        String QueryMaxApplicationPart = "SELECT MAX("+ColumnMaxApplicationPart+") AS "+ColumnMaxApplicationPart+" FROM Application_Part";
+        inquiryGetOneRes = new InquiryGetOneRes();
+        inquiryGetOneRes.start(QueryMaxApplicationPart,ColumnMaxApplicationPart);
+        try {
+            inquiryGetOneRes.join();
+        } catch (InterruptedException e) {
+            Log.e("GetOneRes",e.getMessage());
+        }
+        //Добавляем запись в таблицу Application_Part
+        if (inquiryGetOneRes.res()=="null"){ //если таблица Application_Part пустая
+            ID_AP = "1";
+            String TableAP = "Application_Part";
+            String ColumnAP = "(`ID_AP`, `ID_Application`, `ID_Drink`, `Sum_AP`)";
+            String ValuesAP = "('" + ID_AP + "', '" + ID_Application +"', '"+ID_Drink+"', '"+tv_PriceSumm2.getText().toString()+"')";
+            AddEntry(TableAP, ColumnAP, ValuesAP);
+        } else { //если в таблице Application_Part есть записи
+            int AP = Integer.parseInt(inquiryGetOneRes.res()) + 1;
+            ID_AP = Integer.toString(AP);
+            String TableAP = "Application_Part";
+            String ColumnAP = "(`ID_AP`, `ID_Application`, `ID_Drink`, `Sum_AP`)";
+            String ValuesAP = "('" + ID_AP + "', '" + ID_Application +"', '"+ID_Drink+"', '"+tv_PriceSumm2.getText().toString()+"')";
+            AddEntry(TableAP, ColumnAP, ValuesAP);
+        }
+
+        //Проверяем есть ли в напитке добавки
+        if(arrayCheckedNameAdditives.length>0) {//если добавки есть
+            SparseBooleanArray sparseBooleanArray = lv_Additives.getCheckedItemPositions();
+            //добовляем все добавки в таблицу ApplicationPart_Additives
+            for (int i = 0; i < arrayCheckedNameAdditives.length; i++) {
+                if (sparseBooleanArray.get(i) == true) {
+                    //Получаем значение ID_Additives
+                    String ColumnAdditives = "ID_Additives";
+                    String QueryAdditives = "SELECT "+ColumnAdditives+" FROM Additives WHERE Name_Additives='"+lv_Additives.getItemAtPosition(i).toString()+"'";
+                    inquiryGetOneRes = new InquiryGetOneRes();
+                    inquiryGetOneRes.start(QueryAdditives,ColumnAdditives);
+                    try {
+                        inquiryGetOneRes.join();
+                    } catch (InterruptedException e) {
+                        Log.e("GetIDAdditives",e.getMessage());
+                    }
+                    String ID_Additives = inquiryGetOneRes.res();
+                    //Заносим запись в таблицу ApplicationPart_Additives
+                    String TableAP_Additives = "ApplicationPart_Additives";
+                    String ColumnAP_Additives = "(`ID_AP`, `ID_Additives`)";
+                    String ValuesAP_Additives = "('" + ID_AP + "', '" +ID_Additives+"')";
+                    AddEntry(TableAP_Additives, ColumnAP_Additives, ValuesAP_Additives);
+                }
+            }
+        }
+
+        if(SelectSyrup!=null){
+            //Получаем значение ID_Syrup
+            String ColumnSyrup = "ID_Syrup";
+            String QuerySyrup = "SELECT "+ColumnSyrup+" FROM Syrup WHERE Name_Syrup='"+SelectSyrup+"'";
+            inquiryGetOneRes = new InquiryGetOneRes();
+            inquiryGetOneRes.start(QuerySyrup,ColumnSyrup);
+            try {
+                inquiryGetOneRes.join();
+            } catch (InterruptedException e) {
+                Log.e("GetIDAdditives",e.getMessage());
+            }
+            String ID_Syrup = inquiryGetOneRes.res();
+            //Заносим запись в таблицу ApplicationPart_Syrup
+            String TableAP_Syrup = "ApplicationPart_Syrup";
+            String ColumnAP_Syrup = "(`ID_AP`, `ID_Syrup`)";
+            String ValuesAP_Syrup = "('" + ID_AP + "', '" +ID_Syrup+"')";
+            AddEntry(TableAP_Syrup, ColumnAP_Syrup, ValuesAP_Syrup);
+        }
+    }
+    private void AddEntry(String tableApplication, String columnApplication, String valuesApplication) {
+        inquiryAdd = new InquiryAdd();
+        inquiryAdd.start(tableApplication, columnApplication, valuesApplication);
+        try {
+            inquiryAdd.join();
+        } catch (InterruptedException e) {
+            Log.e("Add", e.getMessage());
+        }
+        Toast.makeText(this, inquiryAdd.resSuccess()+" в таблицу "+tableApplication, Toast.LENGTH_SHORT).show();
+    }
+    private void getID_Shift_ID_CH() {
+        inquiryGetShiftID_id_ch = new InquiryGetShiftID_ID_CH();
+        inquiryGetShiftID_id_ch.start(Date,Login);
+        try {
+            inquiryGetShiftID_id_ch.join();
+        } catch (InterruptedException e) {
+            Log.e("GetShiftID_id_ch:", e.getMessage());
+        }
+
+        ID_Shift = inquiryGetShiftID_id_ch.resID_Shift();
     }
 }
