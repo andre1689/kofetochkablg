@@ -27,7 +27,7 @@ public class WorkActivity extends AppCompatActivity {
     private String Login;
     private String ID_Shift = null;
     private String Name_CH = null;
-    FloatingActionButton floatingActionButton;
+    FloatingActionButton floatingActionButtonDrink, floatingActionButtonCoffee;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -41,11 +41,20 @@ public class WorkActivity extends AppCompatActivity {
         }
 
         initializeNavigationDrawer(toolbar);
-        floatingActionButton = (FloatingActionButton) findViewById(R.id.action_drink);
-        floatingActionButton.setOnClickListener(new View.OnClickListener() {
+        floatingActionButtonDrink = (FloatingActionButton) findViewById(R.id.action_drink);
+        floatingActionButtonDrink.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(WorkActivity.this, NewOrderActivity.class);
+                intent.putExtra("Login",Login);
+                startActivity(intent);
+            }
+        });
+        floatingActionButtonCoffee = (FloatingActionButton) findViewById(R.id.action_coffee);
+        floatingActionButtonCoffee.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(WorkActivity.this,NewCoffeeActivity.class);
                 intent.putExtra("Login",Login);
                 startActivity(intent);
             }
