@@ -1,5 +1,6 @@
 package com.kofetochka.kofetochkablg;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -56,7 +57,6 @@ public class NewOrderActivity extends AppCompatActivity{
     InquiryGetArrayVolumeDrink inquiryGetArrayVolumeDrink;
     InquiryGetArrayNameAdditives inquiryGetArrayNameAdditives;
     InquiryGetArrayNameSyrup inquiryGetArrayNameSyrup;
-    InquiryGetShiftID_ID_CH inquiryGetShiftID_id_ch;
     InquiryAdd inquiryAdd;
     InquiryGetOneRes inquiryGetOneRes;
     @Override
@@ -320,7 +320,7 @@ public class NewOrderActivity extends AppCompatActivity{
     }
     private void FillingListViewNameAdditives(String[] arrayname_additives) {
         A = arrayname_additives.length;
-        ArrayAdapter<String> adapter_additives = new ArrayAdapter<>(this, R.layout.list_item_2, arrayname_additives);
+        ArrayAdapter<String> adapter_additives = new ArrayAdapter<>(this, R.layout.list_item_check, arrayname_additives);
         lv_Additives.setAdapter(adapter_additives);
         Utility.setListViewHeightBasedOnChildren(lv_Additives);
     }
@@ -332,7 +332,7 @@ public class NewOrderActivity extends AppCompatActivity{
     }
 
     public void addApplication (View view){
-        getID_Shift_ID_CH();
+        getID_Shift();
         String ID_AP;
         String ID_Application;
 
@@ -444,7 +444,13 @@ public class NewOrderActivity extends AppCompatActivity{
             String ValuesAP_Syrup = "('" + ID_AP + "', '" +ID_Syrup+"')";
             AddEntry(TableAP_Syrup, ColumnAP_Syrup, ValuesAP_Syrup);
         }
+
+        Intent intent = new Intent(this,ApplicationPartActivity.class);
+        intent.putExtra("ID_AP",ID_AP);
+        intent.putExtra("Login", Login);
+        startActivity(intent);
     }
+
     private void AddEntry(String tableApplication, String columnApplication, String valuesApplication) {
         inquiryAdd = new InquiryAdd();
         inquiryAdd.start(tableApplication, columnApplication, valuesApplication);
@@ -455,15 +461,16 @@ public class NewOrderActivity extends AppCompatActivity{
         }
         Toast.makeText(this, inquiryAdd.resSuccess()+" в таблицу "+tableApplication, Toast.LENGTH_SHORT).show();
     }
-    private void getID_Shift_ID_CH() {
-        inquiryGetShiftID_id_ch = new InquiryGetShiftID_ID_CH();
-        inquiryGetShiftID_id_ch.start(Date,Login);
+    private void getID_Shift() {
+        String ColumnShift = "ID_Shift";
+        String QuiryShift = "SELECT "+ColumnShift+" FROM Shift WHERE (Date_Shift='"+Date+"') AND (Login = '"+Login+"')";
+        inquiryGetOneRes = new InquiryGetOneRes();
+        inquiryGetOneRes.start(QuiryShift,ColumnShift);
         try {
-            inquiryGetShiftID_id_ch.join();
+            inquiryGetOneRes.join();
         } catch (InterruptedException e) {
-            Log.e("GetShiftID_id_ch:", e.getMessage());
+            Log.e("Get ID_Shift",e.getMessage());
         }
-
-        ID_Shift = inquiryGetShiftID_id_ch.resID_Shift();
+        ID_Shift = inquiryGetOneRes.res();
     }
 }

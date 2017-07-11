@@ -3,11 +3,11 @@ package com.kofetochka.kofetochkablg;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
+import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.mikepenz.materialdrawer.AccountHeader;
 import com.mikepenz.materialdrawer.AccountHeaderBuilder;
 import com.mikepenz.materialdrawer.Drawer;
@@ -27,6 +27,7 @@ public class WorkActivity extends AppCompatActivity {
     private String Login;
     private String ID_Shift = null;
     private String Name_CH = null;
+    FloatingActionButton floatingActionButton;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -40,6 +41,15 @@ public class WorkActivity extends AppCompatActivity {
         }
 
         initializeNavigationDrawer(toolbar);
+        floatingActionButton = (FloatingActionButton) findViewById(R.id.action_drink);
+        floatingActionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(WorkActivity.this, NewOrderActivity.class);
+                intent.putExtra("Login",Login);
+                startActivity(intent);
+            }
+        });
 
     }
 
