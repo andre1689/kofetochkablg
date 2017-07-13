@@ -6,16 +6,20 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import com.kofetochka.inquiry.InquiryIdentification;
 import com.kofetochka.inquiry.InquiryRole;
+import com.mikepenz.iconics.utils.Utils;
 
 public class LoginActivity extends Activity {
 
     private EditText etLogin, etPassword;
+    private Button btn_Enter;
 
     private String Login = null;
     private String Password = null;
@@ -36,6 +40,8 @@ public class LoginActivity extends Activity {
 
         etLogin = (EditText)findViewById(R.id.editText_Login);
         etPassword = (EditText)findViewById(R.id.editText_Password);
+        btn_Enter = (Button) findViewById(R.id.button_Login);
+
     }
 
     public void ViewDB (View view){
