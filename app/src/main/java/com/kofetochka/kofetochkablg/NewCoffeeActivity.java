@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.kofetochka.inquiry.InquiryGetArrayOneColumn;
 import com.kofetochka.inquiry.InquiryGetOneRes;
@@ -77,7 +78,7 @@ public class NewCoffeeActivity extends AppCompatActivity{
                     LENGHT_VOLUMECOFFEE = Volume_Coffee.length;
                     if (LENGHT_VOLUMECOFFEE==1){
                         SelectVolumeCoffee = Volume_Coffee[0].toString();
-                        int length_AmountCoffee = Integer.parseInt(getOneRes("SELECT Amount_Coffee FROM Coffee WHERE (Name_Coffee='"+SelectNameCoffee+"') AND (Volume_Coffee='"+SelectVolumeCoffee+"')","Amount_Coffee"));
+                        int length_AmountCoffee = Integer.parseInt(getOneRes("SELECT Amount_Coffee FROM Coffee WHERE (Name_Coffee='"+SelectNameCoffee+"') AND (Volume_Coffee='"+SelectVolumeCoffee+"') AND (ID_CH='"+ID_CH+"')","Amount_Coffee"));
                         fillAmountCoffee(length_AmountCoffee);
                         setPriceCoffee();
                         alpha1();
