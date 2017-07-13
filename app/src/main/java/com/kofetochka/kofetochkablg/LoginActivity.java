@@ -4,74 +4,47 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.TextInputLayout;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
-import com.kofetochka.inquiry.InquiryIdentification;
-import com.kofetochka.inquiry.InquiryRole;
-import com.mikepenz.iconics.utils.Utils;
+import com.kofetochka.inquiry.InquiryGetOneRes;
 
 public class LoginActivity extends Activity {
 
     private EditText etLogin, etPassword;
     private Button btn_Enter;
 
-    private String Login = null;
-    private String Password = null;
-    private String Surname = null;
-    private String Name = null;
-    private String Middlename = null;
-    private String Block = null;
-    private String Role = null;
-    private String NameRole = null;private
+    private InquiryGetOneRes inquiryGetOneRes;
 
-    InquiryIdentification inquiryIdentification;
-    InquiryRole inquiryRole;
+    TextInputLayout til_password, til_login;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_layout);
 
-        etLogin = (EditText)findViewById(R.id.editText_Login);
-        etPassword = (EditText)findViewById(R.id.editText_Password);
+        til_login = (TextInputLayout) findViewById(R.id.login_layout);
+        etLogin = (EditText)findViewById(R.id.EditText_Login);
+        til_password = (TextInputLayout) findViewById(R.id.password_layout);
+        etPassword = (EditText)findViewById(R.id.EditText_Password);
         btn_Enter = (Button) findViewById(R.id.button_Login);
 
     }
 
     public void ViewDB (View view){
-        Login = etLogin.getText().toString();
-        inquiryIdentification = new InquiryIdentification();
-        inquiryIdentification.start(Login);
+        String Login = etLogin.getText().toString();
 
-        try {
-            inquiryIdentification.join();
-        } catch (InterruptedException e) {
-            Log.e("Pass 0", e.getMessage());
-        }
-
-        Password = inquiryIdentification.resPassword();
-        Surname = inquiryIdentification.resSurname();
-        Name = inquiryIdentification.resName();
-        Middlename = inquiryIdentification.resMiddlename();
-        Block = inquiryIdentification.resBlock();
-        Role = inquiryIdentification.resRole();
-
-        inquiryRole = new InquiryRole();
-        inquiryRole.start(Role);
-
-        try {
-            inquiryRole.join();
-        } catch (InterruptedException e) {
-            Log.e("Pass 0", e.getMessage());
-        }
-
-        NameRole = inquiryRole.resNameRole();
+        String Password = getOneRes("SELECT Password FROM Identification WHERE Login='"+Login+"'","Password");
+        String Surname = getOneRes("SELECT Surname FROM Identification WHERE Login='"+Login+"'","Surname");
+        String Name = getOneRes("SELECT Name FROM Identification WHERE Login='"+Login+"'","Name");
+        String Block = getOneRes("SELECT Block FROM Identification WHERE Login='"+Login+"'","Block");
+        String Role = getOneRes("SELECT ID_role FROM Identification WHERE Login='"+Login+"'","ID_role");
+        String NameRole = getOneRes("SELECT Name_role FROM Role WHERE ID_role='"+Role+"'","Name_role");
 
         if (Login!=null){
             if (etPassword.getText().toString().equals(Password)){
@@ -83,11 +56,73 @@ public class LoginActivity extends Activity {
                     intent.putExtra("Name", Name);
                     startActivity(intent);
                 }
-                else Toast.makeText(this, "Ваша учетная запись заблокирована. Обратитесь к администратору.", Toast.LENGTH_LONG).show();
+                else {
+                    til_login.setErrorEnabled(true);
+                    til_login.setError(getResources().getString(R.string.error_block));
+                }
             }
-            else Toast.makeText(this, "Пара логин/пароль введены неверно", Toast.LENGTH_LONG).show();
+            else {
+                til_login.setErrorEnabled(true);
+                til_login.setError(getResources().getString(R.string.error_login_password));
+                til_password.setErrorEnabled(true);
+                til_password.setError(getResources().getString(R.string.error_login_password));
+            }
         }
-        else Toast.makeText(this, "Пара логин/пароль введены неверно", Toast.LENGTH_LONG).show();
+        else {
+            til_login.setErrorEnabled(true);
+            til_login.setError(getResources().getString(R.string.error_login_password));
+            til_password.setErrorEnabled(true);
+            til_password.setError(getResources().getString(R.string.error_login_password));
+        }
 
+        etLogin.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                til_login.setErrorEnabled(false);
+                til_password.setErrorEnabled(false);
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+        etPassword.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                til_login.setErrorEnabled(false);
+                til_password.setErrorEnabled(false);
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+    }
+
+    private String getOneRes(String inquiry, String column){
+        String Inquiry = inquiry;
+        String Column = column;
+        inquiryGetOneRes = new InquiryGetOneRes();
+        inquiryGetOneRes.start(Inquiry,Column);
+        try {
+            inquiryGetOneRes.join();
+        } catch (InterruptedException e) {
+            Log.e("GetLogin",e.getMessage());
+        }
+        return inquiryGetOneRes.res();
     }
 }

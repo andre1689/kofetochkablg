@@ -1,56 +1,94 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/textView_Login"
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="30dp"
-        android:layout_marginRight="30dp"
+        android:layout_marginBottom="50dp"
         android:layout_marginTop="30dp"
-        android:text="Логин:"
-        android:textSize="18sp" />
+        android:orientation="horizontal">
 
-    <EditText
-        android:id="@+id/editText_Login"
+        <TextView
+            android:id="@+id/textView_Box"
+            android:layout_width="8dp"
+            android:layout_height="72dp"
+            android:background="@color/colorPrimary"
+            android:text="" />
+
+        <TextView
+            android:id="@+id/textView_LOGIN"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_marginLeft="30dp"
+            android:text="@string/table_login"
+            android:textColor="@color/colorPrimary"
+            android:textSize="50sp"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/login_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="30dp"
-        android:layout_marginRight="30dp"
-        android:ems="10"
-        android:inputType="textPersonName" />
+        android:layout_marginLeft="38dp"
+        android:layout_marginRight="38dp"
+        android:layout_marginTop="8dp">
+
+        <EditText
+            android:id="@+id/EditText_Login"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/hint_login"
+            android:textIsSelectable="false"
+            android:textSize="18sp" />
+
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/password_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="38dp"
+        android:layout_marginRight="38dp"
+        android:layout_marginTop="18dp"
+        app:hintAnimationEnabled="false">
+
+        <EditText
+            android:id="@+id/EditText_Password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/hint_password"
+            android:inputType="textPassword"
+            android:textColorLink="@color/colorPrimary"
+            android:textSize="18sp" />
+
+    </android.support.design.widget.TextInputLayout>
 
     <TextView
-        android:id="@+id/textView_Password"
-        android:layout_width="match_parent"
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="30dp"
-        android:layout_marginRight="30dp"
-        android:layout_marginTop="20dp"
-        android:text="Пароль:"
-        android:textSize="18sp" />
-
-    <EditText
-        android:id="@+id/editText_Password"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="30dp"
-        android:layout_marginRight="30dp"
-        android:ems="10"
-        android:inputType="textPassword" />
+        android:layout_marginLeft="38dp"
+        android:layout_marginTop="30dp"
+        android:text="* Обязательные поля" />
 
     <Button
         android:id="@+id/button_Login"
+        style="@android:style/Widget.Material.Button.Colored"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginLeft="60dp"
         android:layout_marginRight="60dp"
         android:layout_marginTop="30dp"
-        android:background="@drawable/round_button"
+        android:backgroundTint="@color/colorPrimary"
         android:onClick="ViewDB"
-        android:text="  Авторизоваться  "
-        android:textColor="@android:color/white" />
+        android:text="Вход"
+        android:textColor="@color/colorBlackText" />
 </LinearLayout>
