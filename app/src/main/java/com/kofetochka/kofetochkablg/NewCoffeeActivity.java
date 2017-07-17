@@ -168,7 +168,7 @@ public class NewCoffeeActivity extends AppCompatActivity{
         }
         int l = inquiryGetArrayOneColumn.resLenght();
         String[] ArrayColumn = new String[l];
-        return ArrayColumn = inquiryGetArrayOneColumn.resName_Drink();
+        return ArrayColumn = inquiryGetArrayOneColumn.resColumn();
     }
 
     private void InitializationDate() {

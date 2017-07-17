@@ -89,6 +89,8 @@
         android:layout_marginTop="30dp"
         android:backgroundTint="@color/colorPrimary"
         android:onClick="ViewDB"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
         android:text="Вход"
         android:textColor="@color/colorBlackText" />
 </LinearLayout>

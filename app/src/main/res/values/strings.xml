@@ -3,8 +3,19 @@
     <string name="item_home">Home</string>
     <string name="item_openshift">Открыть смену</string>
     <string name="table_login">ВХОД</string>
-    <string name="hint_login">Логин*</string>
-    <string name="hint_password">Пароль*</string>
+    <string name="hint_login">Логин *</string>
+    <string name="hint_password">Пароль *</string>
     <string name="error_block">Ваша учетная запись заблокирована</string>
     <string name="error_login_password">Пара логин/пароль введены неверно</string>
+    <string name="hint_db_150">"Стаканчики 150 мл. *"</string>
+    <string name="hint_db_200">"Стаканчики 200 мл. *"</string>
+    <string name="hint_db_300">"Стаканчики 300 мл. *"</string>
+    <string name="hint_db_400">"Стаканчики 400 мл. *"</string>
+    <string name="hint_db_Sum">"Стаканчики 400 мл. (Лето) *"</string>
+    <string name="hint_Coffee_1kg">"Кофе зерно (1 кг.) *"</string>
+    <string name="hint_Coffee_250g">"Кофе зерно (250 г.) *"</string>
+    <string name="hint_Coffee_Drip">"Drip кофе *"</string>
+    <string name="hint_Coffee_Exchenge">"Размен *"</string>
+    <string name="error_OpenShift">"Заполните обязательные поля"</string>
+
 </resources>

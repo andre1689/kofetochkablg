@@ -92,7 +92,7 @@ public class InquiryGetArrayOneColumn extends Thread{
         this.start();
     }
 
-    public String[] resName_Drink(){
+    public String[] resColumn(){
         return arrayRes_Column;
     }
 
