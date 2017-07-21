@@ -51,7 +51,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.concurrent.ExecutionException;
 
-public class OpenShift extends AppCompatActivity{
+public class OpenShiftActivity extends AppCompatActivity{
 
     private String SelectName_CH = null;
     private String ID_CH = null;
@@ -427,6 +427,7 @@ public class OpenShift extends AppCompatActivity{
                         .positiveColorRes(R.color.colorPrimary)
                         .content(MessageOpenShift)
                         .positiveText("Ok")
+                        .cancelable(false)
                         .show();
                 //Закрываем наше Activity и преходим в WorkActivity
                 //startWorkActivity();

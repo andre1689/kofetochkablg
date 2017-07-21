@@ -5,9 +5,12 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import com.getbase.floatingactionbutton.FloatingActionButton;
+import com.kofetochka.inquiry.InquiryGetOneRes;
 import com.mikepenz.materialdrawer.AccountHeader;
 import com.mikepenz.materialdrawer.AccountHeaderBuilder;
 import com.mikepenz.materialdrawer.Drawer;
@@ -29,8 +32,11 @@ public class WorkActivity extends AppCompatActivity {
     private String Name_CH = null;
     FloatingActionButton floatingActionButtonDrink, floatingActionButtonCoffee;
 
+    InquiryGetOneRes inquiryGetOneRes;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
+        Login = getIntent().getStringExtra("Login");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.work_layout);
 
@@ -64,10 +70,10 @@ public class WorkActivity extends AppCompatActivity {
 
     private void initializeNavigationDrawer(Toolbar toolbar) {
 
-        Surname = getIntent().getStringExtra("Surname");
-        Name = getIntent().getStringExtra("Name");
-        NameRole = getIntent().getStringExtra("NameRole");
-        Login = getIntent().getStringExtra("Login");
+        String ID_Role = getOneRes("SELECT ID_role FROM Identification WHERE Login='"+Login+"'","ID_role");
+        NameRole = getOneRes("SELECT Name_role FROM Role WHERE ID_role='"+ID_Role+"'","Name_role");
+        Surname = getOneRes("SELECT Surname FROM Identification WHERE Login='"+Login+"'","Surname");
+        Name = getOneRes("SELECT Name FROM Identification WHERE Login='"+Login+"'","Name");
         ID_Shift = getIntent().getStringExtra("ID_Shift");
         Name_CH = getIntent().getStringExtra("Name_CH");
 
@@ -104,12 +110,13 @@ public class WorkActivity extends AppCompatActivity {
                     public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
                         if (drawerItem!=null){
                             if (drawerItem.getIdentifier()==2){
-                                Intent intent = new Intent(com.kofetochka.kofetochkablg.WorkActivity.this, OpenShift.class);
+                                Intent intent = new Intent(com.kofetochka.kofetochkablg.WorkActivity.this, OpenShiftActivity.class);
                                 intent.putExtra("Login",Login);
                                 intent.putExtra("NameRole",NameRole);
                                 intent.putExtra("Surname", Surname);
                                 intent.putExtra("Name", Name);
                                 startActivity(intent);
+                                finish();
                             }
                             if (drawerItem.getIdentifier()==3){
                                 Intent intent = new Intent(com.kofetochka.kofetochkablg.WorkActivity.this, CloseShiftActivity.class);
@@ -118,6 +125,7 @@ public class WorkActivity extends AppCompatActivity {
                                 intent.putExtra("Surname", Surname);
                                 intent.putExtra("Name", Name);
                                 startActivity(intent);
+                                finish();
                             }
                         }
 
@@ -128,8 +136,19 @@ public class WorkActivity extends AppCompatActivity {
 
     }
 
+    private String getOneRes(String inquiry, String column) {
+        inquiryGetOneRes = new InquiryGetOneRes();
+        inquiryGetOneRes.start(inquiry,column);
+        try {
+            inquiryGetOneRes.join();
+        } catch (InterruptedException e) {
+            Log.e("GetOneResWork",e.getMessage());
+        }
+        return inquiryGetOneRes.res();
+    }
+
     public void IntentOpenShift (View view){
-        Intent intent = new Intent(this, OpenShift.class);
+        Intent intent = new Intent(this, OpenShiftActivity.class);
         startActivity(intent);
     }
 
