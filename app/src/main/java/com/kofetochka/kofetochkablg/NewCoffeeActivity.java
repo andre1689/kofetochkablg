@@ -64,6 +64,9 @@ public class NewCoffeeActivity extends AppCompatActivity{
         ID_CH = getOneRes("SELECT ID_CH FROM Shift WHERE (Login='"+Login+"') AND (Date_Shift='"+Date+"')","ID_CH");
         Name_Coffee = getArrayOneColumn("SELECT Name_Coffee FROM Coffee WHERE (ID_CH='"+ID_CH+"') AND (Amount_Coffee>0) GROUP BY Name_Coffee","Name_Coffee");
 
+        btn_ApplicationPart.setVisibility(View.INVISIBLE);
+        btn_Application.setVisibility(View.INVISIBLE);
+
         fillNameCoffee(Name_Coffee);
 
         lv_NameCoffee.setOnItemClickListener(new AdapterView.OnItemClickListener() {

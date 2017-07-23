@@ -440,6 +440,4 @@ public class CloseShiftActivity extends AppCompatActivity{
         }
         return super.onOptionsItemSelected(item);
     }
-
-
 }

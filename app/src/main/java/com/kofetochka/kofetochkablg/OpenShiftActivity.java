@@ -385,54 +385,61 @@ public class OpenShiftActivity extends AppCompatActivity{
         error = checkingFilling();
         //Если все поля заполнены, то проверяем, не была ли смена уже открыта данным пользователем
         if(error==0){
-            ID_Shift = getOneRes("SELECT ID_Shift FROM Shift WHERE (Date_Shift='"+Date+"') AND (ID_CH='"+ID_CH+"') AND (Login='"+Login+"')","ID_Shift");
+            ID_Shift = getOneRes("SELECT ID_Shift FROM Shift WHERE (Date_Shift='"+Date+"') AND (Login='"+Login+"')","ID_Shift");
             if(ID_Shift!=null){
-                Snackbar.make(content, "Смена уже была Вами открыта", Snackbar.LENGTH_LONG).show();
-            } else {
-                //Добовляет смену
-                addEntry("Shift","(`Date_Shift`,`Time_Shift`,`ID_CH`,`Login`)","('"+Date+"', '"+Time+"', '"+ID_CH+"', '"+Login+"')");
-                //Получаем ID добавленной нами смены
-                ID_Shift = getOneRes("SELECT ID_Shift FROM Shift WHERE (Date_Shift='"+Date+"') AND (ID_CH='"+ID_CH+"') AND (Login='"+Login+"')","ID_Shift");
-                //Добавляем запись в таблицу Склад
-                CheckingReviseStorageOpenShift();
-                addEntry("Storage","(`OpenShift_St`, `DiceBox_150_St`, `DiceBox_200_St`, `DiceBox_300_St`, `DiceBox_400_St`, `DiceBox_Summer_St`, `Coffee_1kg_St`, `Coffee_250g_St`, `DripCoffee_St`, `Exchange_St`, `Comment_St`, `ID_Shift`, `SumError_St`, `SumClick_St`)",
-                        "('1', '"
-                        +et_DiceBox_150.getText().toString()+"', '"
-                        +et_DiceBox_200.getText().toString()+"', '"
-                        +et_DiceBox_300.getText().toString()+"', '"
-                        +et_DiceBox_400.getText().toString()+"', '"
-                        +et_DiceBox_Sum.getText().toString()+"', '"
-                        +et_Coffee_1kg.getText().toString()+"', '"
-                        +et_Coffee_250g.getText().toString()+"', '"
-                        +et_DripCoffee.getText().toString()+"', '"
-                        +et_Exchenge.getText().toString()+"', '"
-                        +et_Comment.getText().toString()+"', '"
-                        +ID_Shift+"', '"
-                        +sum_error+"', '"
-                        +sum_click+"')"
-                        );
-                if (inquiryAdd.resSuccess().equals("Запись добавлена")){
-                    MessageOpenShift = "Смена открыта";
+                String ID_St = getOneRes("SELECT ID_St FROM Storage WHERE (ID_Shift='"+ID_Shift+"') AND (OpenShift_St='0')","ID_St");
+                if(ID_St==null){
+                    Snackbar.make(content, "Смена уже была Вами открыта", Snackbar.LENGTH_LONG).show();
                 } else {
-                    MessageOpenShift = "При открытии смены произошла ошибка. Смена не открыта.";
+                    AddShiftAndStorage();
                 }
-                new MaterialDialog.Builder(this)
-                        .onPositive(new MaterialDialog.SingleButtonCallback() {
-                            @Override
-                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                startWorkActivity();
-                            }
-                        })
-                        .title("Сообщение")
-                        .positiveColorRes(R.color.colorPrimary)
-                        .content(MessageOpenShift)
-                        .positiveText("Ok")
-                        .cancelable(false)
-                        .show();
-                //Закрываем наше Activity и преходим в WorkActivity
-                //startWorkActivity();
+            } else {
+                AddShiftAndStorage();
             }
         }
+    }
+    //Добавляем запись в таблицу OpenShift & Stoarage
+    private void AddShiftAndStorage() {
+        //Добовляет смену
+        addEntry("Shift","(`Date_Shift`,`Time_Shift`,`ID_CH`,`Login`)","('"+Date+"', '"+Time+"', '"+ID_CH+"', '"+Login+"')");
+        //Получаем ID добавленной нами смены
+        ID_Shift = getOneRes("SELECT ID_Shift FROM Shift WHERE (Date_Shift='"+Date+"') AND (ID_CH='"+ID_CH+"') AND (Login='"+Login+"')","ID_Shift");
+        //Добавляем запись в таблицу Склад
+        CheckingReviseStorageOpenShift();
+        addEntry("Storage","(`OpenShift_St`, `DiceBox_150_St`, `DiceBox_200_St`, `DiceBox_300_St`, `DiceBox_400_St`, `DiceBox_Summer_St`, `Coffee_1kg_St`, `Coffee_250g_St`, `DripCoffee_St`, `Exchange_St`, `Comment_St`, `ID_Shift`, `SumError_St`, `SumClick_St`)",
+                "('1', '"
+                +et_DiceBox_150.getText().toString()+"', '"
+                +et_DiceBox_200.getText().toString()+"', '"
+                +et_DiceBox_300.getText().toString()+"', '"
+                +et_DiceBox_400.getText().toString()+"', '"
+                +et_DiceBox_Sum.getText().toString()+"', '"
+                +et_Coffee_1kg.getText().toString()+"', '"
+                +et_Coffee_250g.getText().toString()+"', '"
+                +et_DripCoffee.getText().toString()+"', '"
+                +et_Exchenge.getText().toString()+"', '"
+                +et_Comment.getText().toString()+"', '"
+                +ID_Shift+"', '"
+                +sum_error+"', '"
+                +sum_click+"')"
+                );
+        if (inquiryAdd.resSuccess().equals("Запись добавлена")){
+            MessageOpenShift = "Смена открыта";
+        } else {
+            MessageOpenShift = "При открытии смены произошла ошибка. Смена не открыта.";
+        }
+        new MaterialDialog.Builder(this)
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        startWorkActivity();
+                    }
+                })
+                .title("Сообщение")
+                .positiveColorRes(R.color.colorPrimary)
+                .content(MessageOpenShift)
+                .positiveText("Ok")
+                .cancelable(false)
+                .show();
     }
     //Проверка на заполнение обязательных полей
     private int checkingFilling() {
