@@ -22,7 +22,6 @@ import com.kofetochka.inquiry.InquiryGetArrayNameDrink;
 import com.kofetochka.inquiry.InquiryGetArrayNameSyrup;
 import com.kofetochka.inquiry.InquiryGetArrayVolumeDrink;
 import com.kofetochka.inquiry.InquiryGetOneRes;
-import com.kofetochka.inquiry.InquiryGetShiftID_ID_CH;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -337,17 +336,10 @@ public class NewOrderActivity extends AppCompatActivity{
         String ID_Application;
 
         //Получение максимального значения ID_Application
-        String ColumnMaxApplication = "ID_Application";
-        String QueryMaxApplication = "SELECT MAX("+ColumnMaxApplication+") AS "+ColumnMaxApplication+" FROM Application";
-        inquiryGetOneRes = new InquiryGetOneRes();
-        inquiryGetOneRes.start(QueryMaxApplication,ColumnMaxApplication);
-        try {
-            inquiryGetOneRes.join();
-        } catch (InterruptedException e) {
-            Log.e("GetOneRes",e.getMessage());
-        }
+        String Max_ID_Application = getOneRes("SELECT MAX(ID_Application) AS ID_Application FROM Application", "ID_Application");
+        Toast.makeText(this, Max_ID_Application, Toast.LENGTH_SHORT).show();
         //Добавляем запись в таблицу Application
-        if (inquiryGetOneRes.res()=="null"){ //если таблица Application пустая
+        if (Max_ID_Application=="null"){ //если таблица Application пустая
             ID_Application = "1";
             String TableApplication = "Application";
             String ColumnApplication = "(`ID_Application`, `ID_Shift`)";
@@ -451,6 +443,17 @@ public class NewOrderActivity extends AppCompatActivity{
         startActivity(intent);
     }
 
+    private String getOneRes(String inquiry, String column) {
+        inquiryGetOneRes = new InquiryGetOneRes();
+        inquiryGetOneRes.start(inquiry, column);
+        try {
+            inquiryGetOneRes.join();
+        } catch (InterruptedException e) {
+            Log.e("GetOneRes",e.getMessage());
+        }
+        return inquiryGetOneRes.res();
+    }
+
     private void AddEntry(String tableApplication, String columnApplication, String valuesApplication) {
         inquiryAdd = new InquiryAdd();
         inquiryAdd.start(tableApplication, columnApplication, valuesApplication);
@@ -459,7 +462,7 @@ public class NewOrderActivity extends AppCompatActivity{
         } catch (InterruptedException e) {
             Log.e("Add", e.getMessage());
         }
-        Toast.makeText(this, inquiryAdd.resSuccess()+" в таблицу "+tableApplication, Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "запись добавлена в таблицу "+tableApplication, Toast.LENGTH_LONG).show();
     }
     private void getID_Shift() {
         String ColumnShift = "ID_Shift";
