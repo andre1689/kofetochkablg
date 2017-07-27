@@ -53,6 +53,7 @@ public class WorkActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(WorkActivity.this, NewOrderActivity.class);
                 intent.putExtra("Login",Login);
+                intent.putExtra("ID_Application","0");
                 startActivity(intent);
             }
         });

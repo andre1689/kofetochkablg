@@ -333,27 +333,28 @@ public class NewOrderActivity extends AppCompatActivity{
     public void addApplication (View view){
         getID_Shift();
         String ID_AP;
-        String ID_Application;
-
-        //Получение максимального значения ID_Application
-        String Max_ID_Application = getOneRes("SELECT MAX(ID_Application) AS ID_Application FROM Application", "ID_Application");
-        Toast.makeText(this, Max_ID_Application, Toast.LENGTH_SHORT).show();
-        //Добавляем запись в таблицу Application
-        if (Max_ID_Application=="null"){ //если таблица Application пустая
-            ID_Application = "1";
-            String TableApplication = "Application";
-            String ColumnApplication = "(`ID_Application`, `ID_Shift`)";
-            String ValuesApplication = "('" + ID_Application + "', '" + ID_Shift + "')";
-            AddEntry(TableApplication, ColumnApplication, ValuesApplication);
-        } else { //если в таблице Application есть записи
-            int Apllication = Integer.parseInt(inquiryGetOneRes.res()) + 1;
-            ID_Application = Integer.toString(Apllication);
-            String TableApplication = "Application";
-            String ColumnApplication = "(`ID_Application`, `ID_Shift`)";
-            String ValuesApplication = "('" + ID_Application + "', '" + ID_Shift + "')";
-            AddEntry(TableApplication, ColumnApplication, ValuesApplication);
+        //String ID_Application;
+        String ID_Application = getIntent().getStringExtra("ID_Application");
+        Toast.makeText(this, ID_Application, Toast.LENGTH_SHORT).show();
+        if (ID_Application.equals("0")) {
+            //Получение максимального значения ID_Application
+            String Max_ID_Application = getOneRes("SELECT MAX(ID_Application) AS ID_Application FROM Application", "ID_Application");
+            //Добавляем запись в таблицу Application
+            if (Max_ID_Application == "null") { //если таблица Application пустая
+                ID_Application = "1";
+                String TableApplication = "Application";
+                String ColumnApplication = "(`ID_Application`, `ID_Shift`)";
+                String ValuesApplication = "('" + ID_Application + "', '" + ID_Shift + "')";
+                AddEntry(TableApplication, ColumnApplication, ValuesApplication);
+            } else { //если в таблице Application есть записи
+                int Apllication = Integer.parseInt(inquiryGetOneRes.res()) + 1;
+                ID_Application = Integer.toString(Apllication);
+                String TableApplication = "Application";
+                String ColumnApplication = "(`ID_Application`, `ID_Shift`)";
+                String ValuesApplication = "('" + ID_Application + "', '" + ID_Shift + "')";
+                AddEntry(TableApplication, ColumnApplication, ValuesApplication);
+            }
         }
-
         //Получение значения ID_Drink
         String ColumnID_Drink = "ID_Drink";
         String QueryID_Drink = "SELECT "+ColumnID_Drink+" FROM Drink WHERE (Name_Drink='"+SelectNameDrink+"') AND (Volume_Drink='"+SelectVolumeDrink+"')";
@@ -440,6 +441,7 @@ public class NewOrderActivity extends AppCompatActivity{
         Intent intent = new Intent(this,ApplicationPartActivity.class);
         intent.putExtra("ID_AP",ID_AP);
         intent.putExtra("Login", Login);
+        intent.putExtra("ID_Application", ID_Application);
         startActivity(intent);
     }
 
@@ -462,7 +464,7 @@ public class NewOrderActivity extends AppCompatActivity{
         } catch (InterruptedException e) {
             Log.e("Add", e.getMessage());
         }
-        Toast.makeText(this, "запись добавлена в таблицу "+tableApplication, Toast.LENGTH_LONG).show();
+        //Toast.makeText(this, "запись добавлена в таблицу "+tableApplication, Toast.LENGTH_LONG).show();
     }
     private void getID_Shift() {
         String ColumnShift = "ID_Shift";
