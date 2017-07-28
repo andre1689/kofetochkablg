@@ -2,7 +2,6 @@ package com.kofetochka.kofetochkablg;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -57,7 +56,7 @@ public class ApplicationPartActivity extends AppCompatActivity{
         floatingActionButtonDrink.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(ApplicationPartActivity.this, NewOrderActivity.class);
+                Intent intent = new Intent(ApplicationPartActivity.this, NewDrinkActivity.class);
                 intent.putExtra("Login",Login);
                 intent.putExtra("ID_Application",ID_Application);
                 startActivity(intent);

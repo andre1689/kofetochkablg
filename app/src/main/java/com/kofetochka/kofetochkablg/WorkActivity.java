@@ -7,7 +7,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
 
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.kofetochka.inquiry.InquiryGetOneRes;
@@ -51,7 +50,7 @@ public class WorkActivity extends AppCompatActivity {
         floatingActionButtonDrink.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(WorkActivity.this, NewOrderActivity.class);
+                Intent intent = new Intent(WorkActivity.this, NewDrinkActivity.class);
                 intent.putExtra("Login",Login);
                 intent.putExtra("ID_Application","0");
                 startActivity(intent);
@@ -154,7 +153,7 @@ public class WorkActivity extends AppCompatActivity {
     }
 
     public void openNewOrderActivity (View view){
-        Intent intent = new Intent(this, NewOrderActivity.class);
+        Intent intent = new Intent(this, NewDrinkActivity.class);
         intent.putExtra("Login",Login);
         startActivity(intent);
     }

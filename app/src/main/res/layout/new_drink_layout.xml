@@ -15,17 +15,17 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="48dp"
             android:orientation="vertical">
 
             <TextView
                 android:id="@+id/textView_Name_Drink"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="30dp"
-                android:layout_marginRight="30dp"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:layout_marginLeft="16dp"
+                android:gravity="center_vertical"
                 android:text="Выберите напиток:"
-                android:textSize="18sp" />
+                android:textSize="14sp" />
 
             <ListView
                 android:id="@+id/listView_Name"
@@ -34,13 +34,12 @@
 
             <TextView
                 android:id="@+id/textView_Volume"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="30dp"
-                android:layout_marginRight="30dp"
-                android:layout_marginTop="30dp"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:layout_marginLeft="16dp"
+                android:gravity="center_vertical"
                 android:text="Выберите объем напитка:"
-                android:textSize="18sp" />
+                android:textSize="14sp" />
 
             <ListView
                 android:id="@+id/listView_Volume"
@@ -51,9 +50,11 @@
                 android:id="@+id/tv_line1"
                 android:layout_width="match_parent"
                 android:layout_height="2dp"
-                android:layout_marginLeft="30dp"
-                android:layout_marginRight="30dp"
-                android:background="@color/md_black_1000"/>
+                android:layout_marginBottom="2dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginTop="2dp"
+                android:background="@color/material_drawer_primary" />
 
             <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
@@ -64,10 +65,10 @@
                     android:id="@+id/textView_PriceDrink"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="30dp"
+                    android:layout_marginLeft="16dp"
                     android:layout_marginRight="10dp"
                     android:text="Цена напитка:"
-                    android:textSize="20sp" />
+                    android:textSize="14sp" />
 
                 <TextView
                     android:id="@+id/textView_PriceDrink2"
@@ -75,42 +76,38 @@
                     android:layout_height="wrap_content"
                     android:layout_marginRight="10dp"
                     android:text="0"
-                    android:textSize="20sp" />
+                    android:textSize="14sp" />
 
                 <TextView
                     android:id="@+id/textView_PriceDrink3"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="30dp"
                     android:text="руб."
-                    android:textSize="20sp" />
+                    android:textSize="14sp" />
             </LinearLayout>
 
             <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginBottom="10dp"
-                android:layout_marginTop="10dp"
+                android:layout_height="48dp"
+                android:gravity="center_vertical"
                 android:orientation="horizontal">
 
                 <TextView
                     android:id="@+id/textView_Additives"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="30dp"
-                    android:layout_marginRight="30dp"
-                    android:layout_marginTop="30dp"
+                    android:layout_marginLeft="16dp"
                     android:layout_weight="1"
+                    android:gravity="center_vertical"
                     android:text="Добавки:"
-                    android:textSize="18sp" />
+                    android:textSize="14sp" />
 
                 <Switch
                     android:id="@+id/switch_Additives"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginRight="30dp"
-                    android:layout_marginTop="30dp"
-                    android:layout_weight="2"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="16dp"
+                    android:layout_weight="3"
                     android:checked="false"
                     android:splitTrack="false" />
 
@@ -126,9 +123,11 @@
                 android:id="@+id/tv_line2"
                 android:layout_width="match_parent"
                 android:layout_height="2dp"
-                android:layout_marginLeft="30dp"
-                android:layout_marginRight="30dp"
-                android:background="@color/md_black_1000"/>
+                android:layout_marginBottom="2dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginTop="2dp"
+                android:background="@color/material_drawer_primary" />
 
             <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
@@ -139,10 +138,10 @@
                     android:id="@+id/textView_PriceAdditives"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="30dp"
+                    android:layout_marginLeft="16dp"
                     android:layout_marginRight="10dp"
                     android:text="Цена добавки:"
-                    android:textSize="20sp" />
+                    android:textSize="14sp" />
 
                 <TextView
                     android:id="@+id/textView_PriceAdditives2"
@@ -150,7 +149,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginRight="10dp"
                     android:text="0"
-                    android:textSize="20sp" />
+                    android:textSize="14sp" />
 
                 <TextView
                     android:id="@+id/textView_PriceAdditives3"
@@ -158,23 +157,21 @@
                     android:layout_height="wrap_content"
                     android:layout_marginRight="30dp"
                     android:text="руб."
-                    android:textSize="20sp" />
+                    android:textSize="14sp" />
             </LinearLayout>
 
             <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginBottom="10dp"
-                android:layout_marginTop="10dp"
+                android:layout_height="48dp"
+                android:layout_gravity="center_vertical"
+                android:gravity="center_vertical"
                 android:orientation="horizontal">
 
                 <TextView
                     android:id="@+id/textView_Syrup"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="30dp"
-                    android:layout_marginRight="30dp"
-                    android:layout_marginTop="30dp"
+                    android:layout_marginLeft="16dp"
                     android:layout_weight="1"
                     android:text="Сиропы:"
                     android:textSize="18sp" />
@@ -182,10 +179,9 @@
                 <Switch
                     android:id="@+id/switch_Syrup"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginRight="30dp"
-                    android:layout_marginTop="30dp"
-                    android:layout_weight="2"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="16dp"
+                    android:layout_weight="3"
                     android:checked="false"
                     android:splitTrack="false" />
             </LinearLayout>
@@ -199,9 +195,11 @@
                 android:id="@+id/tv_line3"
                 android:layout_width="match_parent"
                 android:layout_height="2dp"
-                android:layout_marginLeft="30dp"
-                android:layout_marginRight="30dp"
-                android:background="@color/md_black_1000"/>
+                android:layout_marginBottom="2dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginTop="2dp"
+                android:background="@color/materialize_primary" />
 
             <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
@@ -214,10 +212,10 @@
                     android:id="@+id/textView_PriceSyrup"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="30dp"
+                    android:layout_marginLeft="16dp"
                     android:layout_marginRight="10dp"
                     android:text="Цена сиропа:"
-                    android:textSize="20sp" />
+                    android:textSize="14sp" />
 
                 <TextView
                     android:id="@+id/textView_PriceSyrup2"
@@ -225,15 +223,17 @@
                     android:layout_height="wrap_content"
                     android:layout_marginRight="10dp"
                     android:text="0"
-                    android:textSize="20sp" />
+                    android:textSize="14sp" />
+
                 <TextView
                     android:id="@+id/textView_PriceSyrup3"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="30dp"
                     android:text="руб."
-                    android:textSize="20sp" />
+                    android:textSize="14sp" />
             </LinearLayout>
+
             <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -243,10 +243,11 @@
                     android:id="@+id/textView_PriceSumm"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="30dp"
+                    android:layout_marginLeft="16dp"
                     android:layout_marginRight="10dp"
                     android:text="Итого:"
-                    android:textSize="20sp" />
+                    android:textColor="@color/colorBlackText"
+                    android:textSize="14sp" />
 
                 <TextView
                     android:id="@+id/textView_PriceSumm2"
@@ -254,7 +255,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginRight="10dp"
                     android:text="0"
-                    android:textSize="20sp" />
+                    android:textColor="@color/colorBlackText"
+                    android:textSize="14sp" />
 
                 <TextView
                     android:id="@+id/textView_PriceSumm3"
@@ -262,18 +264,26 @@
                     android:layout_height="wrap_content"
                     android:layout_marginRight="30dp"
                     android:text="руб."
-                    android:textSize="20sp" />
+                    android:textColor="@color/colorBlackText"
+                    android:textSize="14sp" />
             </LinearLayout>
 
             <Button
                 android:id="@+id/button_Add"
+                style="@android:style/Widget.Material.Button.Colored"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_gravity="center"
+                android:layout_gravity="right"
+                android:layout_marginBottom="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginTop="32dp"
                 android:layout_weight="1"
-                android:gravity="bottom"
+                android:backgroundTint="@color/colorPrimary"
                 android:onClick="addApplication"
-                android:text="Добавить" />
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:text="Добавить"
+                android:textColor="@color/colorBlackText" />
         </LinearLayout>
     </ScrollView>
 

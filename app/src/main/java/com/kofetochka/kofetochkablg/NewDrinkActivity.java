@@ -14,8 +14,8 @@ import android.widget.CompoundButton;
 import android.widget.ListView;
 import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.kofetochka.dto.GetOneResDTO;
 import com.kofetochka.inquiry.InquiryAdd;
 import com.kofetochka.inquiry.InquiryGetArrayNameAdditives;
 import com.kofetochka.inquiry.InquiryGetArrayNameDrink;
@@ -26,7 +26,7 @@ import com.kofetochka.inquiry.InquiryGetOneRes;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class NewOrderActivity extends AppCompatActivity{
+public class NewDrinkActivity extends AppCompatActivity{
 
     private final String TABLE_DRINK = "Drink";
     private final String TABLE_ADDITIVES = "Additives";
@@ -43,7 +43,6 @@ public class NewOrderActivity extends AppCompatActivity{
     private String PriceDrink;
     private String Date;
     private String Login;
-    private String ID_Shift;
     private String Season;
 
     String[] arrayName_Drink, arrayOneName_Drink, arrayVolume_Drink, arrayOneVolume_Drink, arrayOneSyrup, arrayNameAdditives, arrayNameSyrup, arrayCheckedNameAdditives;
@@ -61,29 +60,17 @@ public class NewOrderActivity extends AppCompatActivity{
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.new_order_layout);
-
+        setContentView(R.layout.new_drink_layout);
+        //Инициализацию Toolbar
+        InitializationToolbar();
+        //Узнаем текуюую дату
         InitializationDate();
+        //Получаем занение логина из предыдущего Activity
         Login = getIntent().getStringExtra("Login");
+        //Инициализация элементов Activity
+        InitializationElementsActivity();
 
         arrayCheckedNameAdditives = new String[0];
-
-        lv_NameDrink = (ListView) findViewById(R.id.listView_Name);
-        lv_VolumeDrink = (ListView) findViewById(R.id.listView_Volume);
-        lv_Additives = (ListView) findViewById(R.id.listView_Additives);
-        lv_Syrup = (ListView) findViewById(R.id.listView_Syrup);
-        switch_additives = (Switch) findViewById(R.id.switch_Additives);
-        switch_Syrup = (Switch) findViewById(R.id.switch_Syrup);
-        tv_PriceDrink2 = (TextView) findViewById(R.id.textView_PriceDrink2);
-        tv_PriceAdditives2 = (TextView) findViewById(R.id.textView_PriceAdditives2);
-        tv_PriceSyrup2 = (TextView) findViewById(R.id.textView_PriceSyrup2);
-        tv_PriceSumm2 = (TextView) findViewById(R.id.textView_PriceSumm2);
-
-        Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
-        if (toolbar != null){
-            setSupportActionBar (toolbar);
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        }
         //Узнаем какой сезон устанвлен в настройках
         getSeason();
         //Получаем массив напитков
@@ -103,7 +90,7 @@ public class NewOrderActivity extends AppCompatActivity{
                     //если объем только один
                     if(v==1){
                         SelectVolumeDrink = arrayVolume_Drink[0].toString();
-                        getPriceDrink(); //получаем цену выбранного напитка
+                        getPriceDrink(SelectNameDrink,SelectVolumeDrink); //получаем цену выбранного напитка
                         tv_PriceDrink2.setText(PriceDrink);//устнавливаем цену в TextView
                         setSumm(); //Суммирум в общую сумму
                     }
@@ -124,7 +111,7 @@ public class NewOrderActivity extends AppCompatActivity{
                     SelectVolumeDrink = ((TextView)view).getText().toString();
                     arrayOneVolume_Drink = new String[]{SelectVolumeDrink};
                     FillingListViewVolumeDrink(arrayOneVolume_Drink);
-                    getPriceDrink();
+                    getPriceDrink(SelectNameDrink,SelectVolumeDrink);
                     tv_PriceDrink2.setText(PriceDrink);
                     setSumm();
                 } else {
@@ -221,40 +208,48 @@ public class NewOrderActivity extends AppCompatActivity{
             }
         });
     }
-
-    private void getSeason() {
-        String ColumnSeason = "Season";
-        String QuirySeason = "SELECT Season FROM Settings";
-        inquiryGetOneRes = new InquiryGetOneRes();
-        inquiryGetOneRes.start(QuirySeason, ColumnSeason);
-        try {
-            inquiryGetOneRes.join();
-        } catch (InterruptedException e) {
-            Log.e("GetSeason",e.getMessage());
-        }
-        Season = inquiryGetOneRes.res();
+    //Метод инициализации элементов Activity
+    private void InitializationElementsActivity() {
+        lv_NameDrink = (ListView) findViewById(R.id.listView_Name);
+        lv_VolumeDrink = (ListView) findViewById(R.id.listView_Volume);
+        lv_Additives = (ListView) findViewById(R.id.listView_Additives);
+        lv_Syrup = (ListView) findViewById(R.id.listView_Syrup);
+        switch_additives = (Switch) findViewById(R.id.switch_Additives);
+        switch_Syrup = (Switch) findViewById(R.id.switch_Syrup);
+        tv_PriceDrink2 = (TextView) findViewById(R.id.textView_PriceDrink2);
+        tv_PriceAdditives2 = (TextView) findViewById(R.id.textView_PriceAdditives2);
+        tv_PriceSyrup2 = (TextView) findViewById(R.id.textView_PriceSyrup2);
+        tv_PriceSumm2 = (TextView) findViewById(R.id.textView_PriceSumm2);
     }
+    //Метод инициализации Tollbar
+    private void InitializationToolbar() {
+        Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
+        if (toolbar != null){
+            setSupportActionBar (toolbar);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
+    }
+    //Метод получения данных по текущему сезону
+    private void getSeason() {
+        GetOneResDTO getOneResDTO = new GetOneResDTO();
+        Season = getOneResDTO.getOneResDTO("SELECT Season FROM Settings","Season");
+    }
+    //Метод инициализации текущей даты
     private void InitializationDate() {
         dateNow = new Date();
         SimpleDateFormat formatForDateNow = new SimpleDateFormat("yyyy-M-d");
         Date = formatForDateNow.format(dateNow);
     }
+    //Метод отображения конечной суммы заказа
     private void setSumm() {
         tv_PriceSumm2.setText(Integer.toString(Integer.parseInt(tv_PriceDrink2.getText().toString())+Integer.parseInt(tv_PriceAdditives2.getText().toString())+Integer.parseInt(tv_PriceSyrup2.getText().toString())));
     }
 
-    private void getPriceDrink() {
-        String ColumnPriceDrink = "Price_Drink";
-        String QuiryPriceDrink = "SELECT " + ColumnPriceDrink + " FROM Drink WHERE (Name_Drink='" + SelectNameDrink + "') AND (Volume_Drink='" + SelectVolumeDrink + "')";
-        inquiryGetOneRes = new InquiryGetOneRes();
-        inquiryGetOneRes.start(QuiryPriceDrink, ColumnPriceDrink);
-        try {
-            inquiryGetOneRes.join();
-        } catch (InterruptedException e) {
-            Log.e("GetPriceDrink", e.getMessage());
-        }
-        PriceDrink = inquiryGetOneRes.res();
+    private void getPriceDrink(String selectNameDrink, String selectVolumeDrink) {
+        GetOneResDTO getOneResDTO = new GetOneResDTO();
+        PriceDrink = getOneResDTO.getOneResDTO("SELECT Price_Drink FROM Drink WHERE (Name_Drink='" + selectNameDrink + "') AND (Volume_Drink='" + selectVolumeDrink + "')","Price_Drink");
     }
+
     private void getArrayNameSyrup() {
         inquiryGetArrayNameSyrup = new InquiryGetArrayNameSyrup();
         inquiryGetArrayNameSyrup.start(TABLE_SYRUP);
@@ -304,25 +299,28 @@ public class NewOrderActivity extends AppCompatActivity{
         arrayVolume_Drink = inquiryGetArrayVolumeDrink.resVolume_Drink();
         FillingListViewVolumeDrink(arrayVolume_Drink);
     }
-
-    private void FillingListViewVolumeDrink(String[] arrayvolume_drink) {
-        V = arrayvolume_drink.length;
-        ArrayAdapter<String> adapter_volume = new ArrayAdapter<>(this, R.layout.list_item, arrayvolume_drink);
-        lv_VolumeDrink.setAdapter(adapter_volume);
-        Utility.setListViewHeightBasedOnChildren(lv_VolumeDrink);
-    }
+    //Метод заполнения ListView значениями наименований напитков
     private void FillingListViewNameDrink(String[] arrayname_drink) {
         L = arrayname_drink.length;
         ArrayAdapter<String> adapter_name = new ArrayAdapter<>(this, R.layout.list_item, arrayname_drink);
         lv_NameDrink.setAdapter(adapter_name);
         Utility.setListViewHeightBasedOnChildren(lv_NameDrink);
     }
+    //Метод заполнения ListView значениями объемов напитка
+    private void FillingListViewVolumeDrink(String[] arrayvolume_drink) {
+        V = arrayvolume_drink.length;
+        ArrayAdapter<String> adapter_volume = new ArrayAdapter<>(this, R.layout.list_item, arrayvolume_drink);
+        lv_VolumeDrink.setAdapter(adapter_volume);
+        Utility.setListViewHeightBasedOnChildren(lv_VolumeDrink);
+    }
+    //Метод заполнения ListView значениями наименований добавок
     private void FillingListViewNameAdditives(String[] arrayname_additives) {
         A = arrayname_additives.length;
         ArrayAdapter<String> adapter_additives = new ArrayAdapter<>(this, R.layout.list_item_check, arrayname_additives);
         lv_Additives.setAdapter(adapter_additives);
         Utility.setListViewHeightBasedOnChildren(lv_Additives);
     }
+    //Метод заполнения ListView значениями наименований сиропов
     private void FillingListViewNameSyrup(String[] arrayname_syrup) {
         S = arrayname_syrup.length;
         ArrayAdapter<String> adapter_syrup = new ArrayAdapter<>(this, R.layout.list_item, arrayname_syrup);
@@ -331,66 +329,36 @@ public class NewOrderActivity extends AppCompatActivity{
     }
 
     public void addApplication (View view){
-        getID_Shift();
-        String ID_AP;
-        //String ID_Application;
+        GetOneResDTO getOneResDTO = new GetOneResDTO();
+        String ID_Shift = getOneResDTO.getOneResDTO("SELECT ID_Shift FROM Shift WHERE (Date_Shift='"+Date+"') AND (Login = '"+Login+"')","ID_Shift");
+        //getID_Shift();
+        String ID_AP = null;
+        //Полчаем значение ID_Application из предыдущего Activity
         String ID_Application = getIntent().getStringExtra("ID_Application");
-        Toast.makeText(this, ID_Application, Toast.LENGTH_SHORT).show();
-        if (ID_Application.equals("0")) {
+        if (ID_Application.equals("0")) {//если ID_Application = 0 (т.е. не был до этого создан)
             //Получение максимального значения ID_Application
-            String Max_ID_Application = getOneRes("SELECT MAX(ID_Application) AS ID_Application FROM Application", "ID_Application");
+            String Max_ID_Application = getOneResDTO.getOneResDTO("SELECT MAX(ID_Application) AS ID_Application FROM Application", "ID_Application");
             //Добавляем запись в таблицу Application
             if (Max_ID_Application == "null") { //если таблица Application пустая
                 ID_Application = "1";
-                String TableApplication = "Application";
-                String ColumnApplication = "(`ID_Application`, `ID_Shift`)";
-                String ValuesApplication = "('" + ID_Application + "', '" + ID_Shift + "')";
-                AddEntry(TableApplication, ColumnApplication, ValuesApplication);
+                AddEntry("Application", "(`ID_Application`, `ID_Shift`)", "('1', '" + ID_Shift + "')");
             } else { //если в таблице Application есть записи
-                int Apllication = Integer.parseInt(inquiryGetOneRes.res()) + 1;
+                int Apllication = Integer.parseInt(Max_ID_Application) + 1;
                 ID_Application = Integer.toString(Apllication);
-                String TableApplication = "Application";
-                String ColumnApplication = "(`ID_Application`, `ID_Shift`)";
-                String ValuesApplication = "('" + ID_Application + "', '" + ID_Shift + "')";
-                AddEntry(TableApplication, ColumnApplication, ValuesApplication);
+                AddEntry("Application", "(`ID_Application`, `ID_Shift`)", "('" + ID_Application + "', '" + ID_Shift + "')");
             }
         }
         //Получение значения ID_Drink
-        String ColumnID_Drink = "ID_Drink";
-        String QueryID_Drink = "SELECT "+ColumnID_Drink+" FROM Drink WHERE (Name_Drink='"+SelectNameDrink+"') AND (Volume_Drink='"+SelectVolumeDrink+"')";
-        inquiryGetOneRes = new InquiryGetOneRes();
-        inquiryGetOneRes.start(QueryID_Drink,ColumnID_Drink);
-        try {
-            inquiryGetOneRes.join();
-        } catch (InterruptedException e) {
-            Log.e("Select ID_Drink",e.getMessage());
-        }
-        String ID_Drink = inquiryGetOneRes.res();
-
+        String ID_Drink = getOneResDTO.getOneResDTO("SELECT ID_Drink FROM Drink WHERE (Name_Drink='"+SelectNameDrink+"') AND (Volume_Drink='"+SelectVolumeDrink+"')","ID_Drink");
         //Получение максимального значения ID_AP
-        String ColumnMaxApplicationPart = "ID_AP";
-        String QueryMaxApplicationPart = "SELECT MAX("+ColumnMaxApplicationPart+") AS "+ColumnMaxApplicationPart+" FROM Application_Part";
-        inquiryGetOneRes = new InquiryGetOneRes();
-        inquiryGetOneRes.start(QueryMaxApplicationPart,ColumnMaxApplicationPart);
-        try {
-            inquiryGetOneRes.join();
-        } catch (InterruptedException e) {
-            Log.e("GetOneRes",e.getMessage());
-        }
+        String Max_AP = getOneResDTO.getOneResDTO("SELECT MAX(ID_AP) AS ID_AP FROM Application_Part","ID_AP");
         //Добавляем запись в таблицу Application_Part
-        if (inquiryGetOneRes.res()=="null"){ //если таблица Application_Part пустая
-            ID_AP = "1";
-            String TableAP = "Application_Part";
-            String ColumnAP = "(`ID_AP`, `ID_Application`, `ID_Drink`, `Sum_AP`)";
-            String ValuesAP = "('" + ID_AP + "', '" + ID_Application +"', '"+ID_Drink+"', '"+tv_PriceSumm2.getText().toString()+"')";
-            AddEntry(TableAP, ColumnAP, ValuesAP);
+        if (Max_AP=="null"){ //если таблица Application_Part пустая
+            AddEntry("Application_Part", "(`ID_AP`, `ID_Application`, `ID_Drink`, `Sum_AP`)", "('1', '" + ID_Application +"', '"+ID_Drink+"', '"+tv_PriceSumm2.getText().toString()+"')");
         } else { //если в таблице Application_Part есть записи
-            int AP = Integer.parseInt(inquiryGetOneRes.res()) + 1;
+            int AP = Integer.parseInt(Max_AP) + 1;
             ID_AP = Integer.toString(AP);
-            String TableAP = "Application_Part";
-            String ColumnAP = "(`ID_AP`, `ID_Application`, `ID_Drink`, `Sum_AP`)";
-            String ValuesAP = "('" + ID_AP + "', '" + ID_Application +"', '"+ID_Drink+"', '"+tv_PriceSumm2.getText().toString()+"')";
-            AddEntry(TableAP, ColumnAP, ValuesAP);
+            AddEntry("Application_Part", "(`ID_AP`, `ID_Application`, `ID_Drink`, `Sum_AP`)", "('" + ID_AP + "', '" + ID_Application +"', '"+ID_Drink+"', '"+tv_PriceSumm2.getText().toString()+"')");
         }
 
         //Проверяем есть ли в напитке добавки
@@ -400,42 +368,18 @@ public class NewOrderActivity extends AppCompatActivity{
             for (int i = 0; i < arrayCheckedNameAdditives.length; i++) {
                 if (sparseBooleanArray.get(i) == true) {
                     //Получаем значение ID_Additives
-                    String ColumnAdditives = "ID_Additives";
-                    String QueryAdditives = "SELECT "+ColumnAdditives+" FROM Additives WHERE Name_Additives='"+lv_Additives.getItemAtPosition(i).toString()+"'";
-                    inquiryGetOneRes = new InquiryGetOneRes();
-                    inquiryGetOneRes.start(QueryAdditives,ColumnAdditives);
-                    try {
-                        inquiryGetOneRes.join();
-                    } catch (InterruptedException e) {
-                        Log.e("GetIDAdditives",e.getMessage());
-                    }
-                    String ID_Additives = inquiryGetOneRes.res();
+                    String ID_Additives = getOneResDTO.getOneResDTO("SELECT ID_Additives FROM Additives WHERE Name_Additives='"+lv_Additives.getItemAtPosition(i).toString()+"'","ID_Additives");
                     //Заносим запись в таблицу ApplicationPart_Additives
-                    String TableAP_Additives = "ApplicationPart_Additives";
-                    String ColumnAP_Additives = "(`ID_AP`, `ID_Additives`)";
-                    String ValuesAP_Additives = "('" + ID_AP + "', '" +ID_Additives+"')";
-                    AddEntry(TableAP_Additives, ColumnAP_Additives, ValuesAP_Additives);
+                    AddEntry("ApplicationPart_Additives", "(`ID_AP`, `ID_Additives`)", "('" + ID_AP + "', '" +ID_Additives+"')");
                 }
             }
         }
 
         if(SelectSyrup!=null){
             //Получаем значение ID_Syrup
-            String ColumnSyrup = "ID_Syrup";
-            String QuerySyrup = "SELECT "+ColumnSyrup+" FROM Syrup WHERE Name_Syrup='"+SelectSyrup+"'";
-            inquiryGetOneRes = new InquiryGetOneRes();
-            inquiryGetOneRes.start(QuerySyrup,ColumnSyrup);
-            try {
-                inquiryGetOneRes.join();
-            } catch (InterruptedException e) {
-                Log.e("GetIDAdditives",e.getMessage());
-            }
-            String ID_Syrup = inquiryGetOneRes.res();
+            String ID_Syrup = getOneResDTO.getOneResDTO("SELECT ID_Syrup FROM Syrup WHERE Name_Syrup='"+SelectSyrup+"'","ID_Syrup");
             //Заносим запись в таблицу ApplicationPart_Syrup
-            String TableAP_Syrup = "ApplicationPart_Syrup";
-            String ColumnAP_Syrup = "(`ID_AP`, `ID_Syrup`)";
-            String ValuesAP_Syrup = "('" + ID_AP + "', '" +ID_Syrup+"')";
-            AddEntry(TableAP_Syrup, ColumnAP_Syrup, ValuesAP_Syrup);
+            AddEntry("ApplicationPart_Syrup", "(`ID_AP`, `ID_Syrup`)", "('" + ID_AP + "', '" +ID_Syrup+"')");
         }
 
         Intent intent = new Intent(this,ApplicationPartActivity.class);
@@ -443,17 +387,6 @@ public class NewOrderActivity extends AppCompatActivity{
         intent.putExtra("Login", Login);
         intent.putExtra("ID_Application", ID_Application);
         startActivity(intent);
-    }
-
-    private String getOneRes(String inquiry, String column) {
-        inquiryGetOneRes = new InquiryGetOneRes();
-        inquiryGetOneRes.start(inquiry, column);
-        try {
-            inquiryGetOneRes.join();
-        } catch (InterruptedException e) {
-            Log.e("GetOneRes",e.getMessage());
-        }
-        return inquiryGetOneRes.res();
     }
 
     private void AddEntry(String tableApplication, String columnApplication, String valuesApplication) {
@@ -464,18 +397,5 @@ public class NewOrderActivity extends AppCompatActivity{
         } catch (InterruptedException e) {
             Log.e("Add", e.getMessage());
         }
-        //Toast.makeText(this, "запись добавлена в таблицу "+tableApplication, Toast.LENGTH_LONG).show();
-    }
-    private void getID_Shift() {
-        String ColumnShift = "ID_Shift";
-        String QuiryShift = "SELECT "+ColumnShift+" FROM Shift WHERE (Date_Shift='"+Date+"') AND (Login = '"+Login+"')";
-        inquiryGetOneRes = new InquiryGetOneRes();
-        inquiryGetOneRes.start(QuiryShift,ColumnShift);
-        try {
-            inquiryGetOneRes.join();
-        } catch (InterruptedException e) {
-            Log.e("Get ID_Shift",e.getMessage());
-        }
-        ID_Shift = inquiryGetOneRes.res();
     }
 }
