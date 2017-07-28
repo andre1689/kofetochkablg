@@ -2,6 +2,7 @@ package com.kofetochka.kofetochkablg;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -29,6 +30,8 @@ public class ApplicationPartActivity extends AppCompatActivity{
     int lenghtAdditives=0;
     int lenghtAP=0;
     FloatingActionButton floatingActionButtonDrink, floatingActionButtonCoffee;
+    List<ApplicationPartDTO> DataSet;
+    ApplicationPartListAdapter recyclerAdapter;
 
     InquiryGetOneRes inquiryGetOneRes;
     InquiryGetArrayOneColumn inquiryGetArrayOneColumn;
@@ -61,13 +64,41 @@ public class ApplicationPartActivity extends AppCompatActivity{
             }
         });
 
-        List<ApplicationPartDTO> myDataset = getDataSet();
+        final List<ApplicationPartDTO> myDataset = getDataSet();
         RecyclerView rv = (RecyclerView) findViewById(R.id.recyclerView);
         rv.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(this);
         rv.setLayoutManager(layoutManager);
-        ApplicationPartListAdapter recyclerAdapter = new ApplicationPartListAdapter(myDataset);
+        recyclerAdapter = new ApplicationPartListAdapter(myDataset);
         rv.setAdapter(recyclerAdapter);
+        recyclerAdapter.setOnItemClickListener(new ApplicationPartListAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View itemView, int position, View view) {
+                switch (view.getId()) {
+                    case R.id.button_Edit:
+                        CopyItem(position);
+                        break;
+                    case R.id.button_Delete:
+                        DeleteItem(position);
+                        break;
+                }
+            }
+        });
+    }
+
+    private void CopyItem(int position){
+        //Скопируем элемент с индексом position и вставим копию в следующую позицию
+        ApplicationPartDTO currentPerson = DataSet.get(position);
+        recyclerAdapter.addItem(position + 1, currentPerson);
+        //Известим адаптер о добавлении элемента
+        recyclerAdapter.notifyItemInserted(position + 1);
+    }
+
+    private void DeleteItem(int position){
+        //Удалим элемент из набора данных адаптера
+        recyclerAdapter.deleteItem(position);
+        //И уведомим об этом адаптер
+        recyclerAdapter.notifyItemRemoved(position);
     }
 
     private String[] getArrayOneColumn(String inquiry, String column){
@@ -94,7 +125,7 @@ public class ApplicationPartActivity extends AppCompatActivity{
     }
 
     public List<ApplicationPartDTO> getDataSet() {
-        List<ApplicationPartDTO> DataSet = new ArrayList();
+        DataSet = new ArrayList();
         for (int i = 0; i < lenghtAP; i++){
             String ID_Drink = getOneRes("SELECT ID_Drink FROM Application_Part WHERE ID_AP='" + array_ID_AP[i] + "'", "ID_Drink");
             String Sum_AP = getOneRes("SELECT Sum_AP FROM Application_Part WHERE ID_AP='" + array_ID_AP[i] + "'", "Sum_AP");
