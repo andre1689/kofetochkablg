@@ -17,6 +17,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.kofetochka.dto.GetArrayOneColumnDTO;
 import com.kofetochka.inquiry.InquiryGetArrayOneColumn;
 import com.kofetochka.inquiry.InquiryGetOneRes;
 
@@ -160,18 +161,21 @@ public class NewCoffeeActivity extends AppCompatActivity{
     }
 
     private String[] getArrayOneColumn(String inquiry, String column) {
-        String Column = column;
+        GetArrayOneColumnDTO getArrayOneColumnDTO = new GetArrayOneColumnDTO();
+        return getArrayOneColumnDTO.getArrayOneColumn(inquiry, column);
+
+        /*String Column = column;
         String Inquiry = inquiry;
         inquiryGetArrayOneColumn = new InquiryGetArrayOneColumn();
         inquiryGetArrayOneColumn.start(inquiry,column);
         try {
             inquiryGetArrayOneColumn.join();
         } catch (InterruptedException e) {
-            Log.e("GetArrayOneColumn",e.getMessage());
+            Log.e("getArrayOneColumn",e.getMessage());
         }
         int l = inquiryGetArrayOneColumn.resLenght();
         String[] ArrayColumn = new String[l];
-        return ArrayColumn = inquiryGetArrayOneColumn.resColumn();
+        return ArrayColumn = inquiryGetArrayOneColumn.resColumn();*/
     }
 
     private void InitializationDate() {

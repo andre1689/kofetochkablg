@@ -41,7 +41,7 @@ public class InquiryGetArrayOneColumn extends Thread{
         nameValuePairs.add(new BasicNameValuePair("Inquiry",Inquiry));
         try {
             HttpClient httpClient = new DefaultHttpClient();
-            HttpPost httpPost = new HttpPost("http://146143.simplecloud.club/kofetochkablg/get_array_one_column.php");
+            HttpPost httpPost = new HttpPost("http://89.223.30.100/kofetochkablg/get_array_one_column.php");
             httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs,"UTF-8"));
             HttpResponse httpResponse = httpClient.execute(httpPost);
             HttpEntity httpEntity = httpResponse.getEntity();

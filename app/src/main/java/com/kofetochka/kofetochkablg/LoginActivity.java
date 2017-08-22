@@ -12,14 +12,14 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
-import com.kofetochka.inquiry.InquiryGetOneRes;
+import com.kofetochka.dto.GetOneResDTO;
 
 public class LoginActivity extends Activity {
 
     private EditText etLogin, etPassword;
     private Button btn_Enter;
 
-    private InquiryGetOneRes inquiryGetOneRes;
+    //private InquiryGetOneRes inquiryGetOneRes;
 
     TextInputLayout til_password, til_login;
 
@@ -37,14 +37,15 @@ public class LoginActivity extends Activity {
     }
 
     public void ViewDB (View view){
+        GetOneResDTO getOneResDTO = new GetOneResDTO();
         String Login = etLogin.getText().toString();
 
-        String Password = getOneRes("SELECT Password FROM Identification WHERE Login='"+Login+"'","Password");
-        String Surname = getOneRes("SELECT Surname FROM Identification WHERE Login='"+Login+"'","Surname");
-        String Name = getOneRes("SELECT Name FROM Identification WHERE Login='"+Login+"'","Name");
-        String Block = getOneRes("SELECT Block FROM Identification WHERE Login='"+Login+"'","Block");
-        String Role = getOneRes("SELECT ID_role FROM Identification WHERE Login='"+Login+"'","ID_role");
-        String NameRole = getOneRes("SELECT Name_role FROM Role WHERE ID_role='"+Role+"'","Name_role");
+        String Password = getOneResDTO.getOneResDTO("SELECT Password FROM Identification WHERE Login='"+Login+"'","Password");
+        String Surname = getOneResDTO.getOneResDTO("SELECT Surname FROM Identification WHERE Login='"+Login+"'","Surname");
+        String Name = getOneResDTO.getOneResDTO("SELECT Name FROM Identification WHERE Login='"+Login+"'","Name");
+        String Block = getOneResDTO.getOneResDTO("SELECT Block FROM Identification WHERE Login='"+Login+"'","Block");
+        String Role = getOneResDTO.getOneResDTO("SELECT ID_role FROM Identification WHERE Login='"+Login+"'","ID_role");
+        String NameRole = getOneResDTO.getOneResDTO("SELECT Name_role FROM Role WHERE ID_role='"+Role+"'","Name_role");
 
         if (Login!=null){
             if (etPassword.getText().toString().equals(Password)){
@@ -113,7 +114,7 @@ public class LoginActivity extends Activity {
 
     }
 
-    private String getOneRes(String inquiry, String column){
+    /*private String getOneRes(String inquiry, String column){
         String Inquiry = inquiry;
         String Column = column;
         inquiryGetOneRes = new InquiryGetOneRes();
@@ -124,5 +125,5 @@ public class LoginActivity extends Activity {
             Log.e("GetLogin",e.getMessage());
         }
         return inquiryGetOneRes.res();
-    }
+    }*/
 }

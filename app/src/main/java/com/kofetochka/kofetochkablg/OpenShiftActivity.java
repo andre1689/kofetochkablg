@@ -1,24 +1,18 @@
 package com.kofetochka.kofetochkablg;
 
 import android.content.Intent;
-import android.graphics.Color;
-import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.annotation.RequiresApi;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
-import android.text.Layout;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -26,30 +20,20 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.kofetochka.inquiry.InquiryAdd;
-import com.kofetochka.inquiry.InquiryAddShift;
-import com.kofetochka.inquiry.InquiryAddStorage;
-import com.kofetochka.inquiry.InquiryCoffeeHouse;
-import com.kofetochka.inquiry.InquiryCoffeeHouseID;
 import com.kofetochka.inquiry.InquiryGetArrayOneColumn;
-import com.kofetochka.inquiry.InquiryGetIDShiftByDateID_CH;
 import com.kofetochka.inquiry.InquiryGetOneRes;
-import com.kofetochka.inquiry.InquiryGetShiftID;
-import com.kofetochka.inquiry.InquiryGetStroageByDateCloseShift;
-
-import org.w3c.dom.Text;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.concurrent.ExecutionException;
+
 
 public class OpenShiftActivity extends AppCompatActivity{
 

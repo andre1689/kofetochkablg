@@ -10,11 +10,14 @@ import android.util.SparseBooleanArray;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.ListView;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.kofetochka.dto.GetArrayOneColumnDTO;
 import com.kofetochka.dto.GetOneResDTO;
 import com.kofetochka.inquiry.InquiryAdd;
 import com.kofetochka.inquiry.InquiryGetArrayNameAdditives;
@@ -28,13 +31,11 @@ import java.util.Date;
 
 public class NewDrinkActivity extends AppCompatActivity{
 
-    private final String TABLE_DRINK = "Drink";
-    private final String TABLE_ADDITIVES = "Additives";
-    private final String TABLE_SYRUP = "Syrup";
-    private int l, L;
-    private int v, V;
+    private int  L;
+    private int  V;
     private int a, A;
     private int s, S;
+    private int volume_drink_lenght;
     private int choise;
     private int Summ = 0;
     private String SelectNameDrink;
@@ -49,12 +50,9 @@ public class NewDrinkActivity extends AppCompatActivity{
     ListView lv_NameDrink, lv_VolumeDrink, lv_Additives, lv_Syrup;
     Switch switch_additives, switch_Syrup;
     TextView tv_PriceDrink2, tv_PriceAdditives2, tv_PriceSyrup2, tv_PriceSumm2;
+    Button btn_Add;
     Date dateNow;
 
-    InquiryGetArrayNameDrink inquiryGetArrayNameDrink;
-    InquiryGetArrayVolumeDrink inquiryGetArrayVolumeDrink;
-    InquiryGetArrayNameAdditives inquiryGetArrayNameAdditives;
-    InquiryGetArrayNameSyrup inquiryGetArrayNameSyrup;
     InquiryAdd inquiryAdd;
     InquiryGetOneRes inquiryGetOneRes;
     @Override
@@ -69,6 +67,8 @@ public class NewDrinkActivity extends AppCompatActivity{
         Login = getIntent().getStringExtra("Login");
         //Инициализация элементов Activity
         InitializationElementsActivity();
+
+        btn_Add.setVisibility(View.INVISIBLE);
 
         arrayCheckedNameAdditives = new String[0];
         //Узнаем какой сезон устанвлен в настройках
@@ -88,11 +88,13 @@ public class NewDrinkActivity extends AppCompatActivity{
                     FillingListViewNameDrink(arrayOneName_Drink);
                     getArrayVolumeDrink();
                     //если объем только один
-                    if(v==1){
+                    volume_drink_lenght = arrayVolume_Drink.length;
+                    if(volume_drink_lenght==1){
                         SelectVolumeDrink = arrayVolume_Drink[0].toString();
                         getPriceDrink(SelectNameDrink,SelectVolumeDrink); //получаем цену выбранного напитка
                         tv_PriceDrink2.setText(PriceDrink);//устнавливаем цену в TextView
                         setSumm(); //Суммирум в общую сумму
+                        btn_Add.setVisibility(View.VISIBLE);
                     }
                     //если напиток выбран и его нужно изменить
                 } else {
@@ -100,6 +102,7 @@ public class NewDrinkActivity extends AppCompatActivity{
                     FillingListViewNameDrink(arrayName_Drink);
                     tv_PriceDrink2.setText("0");
                     setSumm();
+                    btn_Add.setVisibility(View.INVISIBLE);
                 }
             }
         });
@@ -107,18 +110,27 @@ public class NewDrinkActivity extends AppCompatActivity{
         lv_VolumeDrink.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (V>1){
-                    SelectVolumeDrink = ((TextView)view).getText().toString();
-                    arrayOneVolume_Drink = new String[]{SelectVolumeDrink};
-                    FillingListViewVolumeDrink(arrayOneVolume_Drink);
-                    getPriceDrink(SelectNameDrink,SelectVolumeDrink);
-                    tv_PriceDrink2.setText(PriceDrink);
-                    setSumm();
-                } else {
-                    SelectVolumeDrink = null;
-                    FillingListViewVolumeDrink(arrayVolume_Drink);
-                    tv_PriceDrink2.setText("0");
-                    setSumm();
+                if(volume_drink_lenght==1){
+                    SelectVolumeDrink = arrayVolume_Drink[0].toString();
+                    getPriceDrink(SelectNameDrink,SelectVolumeDrink); //получаем цену выбранного напитка
+                    tv_PriceDrink2.setText(PriceDrink);//устнавливаем цену в TextView
+                    setSumm(); //Суммирум в общую сумму
+                }else {
+                    if (V > 1) {
+                        SelectVolumeDrink = ((TextView) view).getText().toString();
+                        arrayOneVolume_Drink = new String[]{SelectVolumeDrink};
+                        FillingListViewVolumeDrink(arrayOneVolume_Drink);
+                        getPriceDrink(SelectNameDrink, SelectVolumeDrink);
+                        tv_PriceDrink2.setText(PriceDrink);
+                        setSumm();
+                        btn_Add.setVisibility(View.VISIBLE);
+                    } else {
+                        SelectVolumeDrink = null;
+                        FillingListViewVolumeDrink(arrayVolume_Drink);
+                        tv_PriceDrink2.setText("0");
+                        setSumm();
+                        btn_Add.setVisibility(View.INVISIBLE);
+                    }
                 }
             }
         });
@@ -220,6 +232,7 @@ public class NewDrinkActivity extends AppCompatActivity{
         tv_PriceAdditives2 = (TextView) findViewById(R.id.textView_PriceAdditives2);
         tv_PriceSyrup2 = (TextView) findViewById(R.id.textView_PriceSyrup2);
         tv_PriceSumm2 = (TextView) findViewById(R.id.textView_PriceSumm2);
+        btn_Add = (Button) findViewById(R.id.button_Add);
     }
     //Метод инициализации Tollbar
     private void InitializationToolbar() {
@@ -251,52 +264,20 @@ public class NewDrinkActivity extends AppCompatActivity{
     }
 
     private void getArrayNameSyrup() {
-        inquiryGetArrayNameSyrup = new InquiryGetArrayNameSyrup();
-        inquiryGetArrayNameSyrup.start(TABLE_SYRUP);
-        try {
-            inquiryGetArrayNameSyrup.join();
-        } catch (InterruptedException e) {
-            Log.e("GetArrayNameSyrup",e.getMessage());
-        }
-        s = inquiryGetArrayNameSyrup.resLenght();
-        arrayNameSyrup = new String[s];
-        arrayNameSyrup = inquiryGetArrayNameSyrup.resName_Syrup();
+        GetArrayOneColumnDTO getArrayOneColumnDTO = new GetArrayOneColumnDTO();
+        arrayNameSyrup = getArrayOneColumnDTO.getArrayOneColumn("SELECT Name_Syrup FROM Syrup","Name_Syrup");
     }
     private void getArrayNameAdditives() {
-        inquiryGetArrayNameAdditives = new InquiryGetArrayNameAdditives();
-        inquiryGetArrayNameAdditives.start(TABLE_ADDITIVES);
-        try {
-            inquiryGetArrayNameAdditives.join();
-        } catch (InterruptedException e) {
-            Log.e("GetArrayNameAdditives",e.getMessage());
-        }
-        a = inquiryGetArrayNameAdditives.resLenght();
-        arrayNameAdditives = new String[a];
-        arrayNameAdditives = inquiryGetArrayNameAdditives.resName_Additives();
+        GetArrayOneColumnDTO getArrayOneColumnDTO = new GetArrayOneColumnDTO();
+        arrayNameAdditives = getArrayOneColumnDTO.getArrayOneColumn("SELECT Name_Additives FROM Additives","Name_Additives");
     }
     private void getArrayNameDrink() {
-        inquiryGetArrayNameDrink = new InquiryGetArrayNameDrink();
-        inquiryGetArrayNameDrink.start(TABLE_DRINK, Season);
-        try {
-            inquiryGetArrayNameDrink.join();
-        } catch (InterruptedException e) {
-            Log.e("GetArrayNameDrink", e.getMessage());
-        }
-        l = inquiryGetArrayNameDrink.resLenght();
-        arrayName_Drink = new String[l];
-        arrayName_Drink = inquiryGetArrayNameDrink.resName_Drink();
+        GetArrayOneColumnDTO getArrayOneColumnDTO = new GetArrayOneColumnDTO();
+        arrayName_Drink = getArrayOneColumnDTO.getArrayOneColumn("SELECT Name_Drink FROM Drink WHERE Season LIKE '%"+Season+"%' GROUP BY Name_Drink","Name_Drink");
     }
     private void getArrayVolumeDrink() {
-        inquiryGetArrayVolumeDrink = new InquiryGetArrayVolumeDrink();
-        inquiryGetArrayVolumeDrink.start(SelectNameDrink);
-        try {
-            inquiryGetArrayVolumeDrink.join();
-        } catch (InterruptedException e) {
-            Log.e("GetArrayVolumeDrink", e.getMessage());
-        }
-        v = inquiryGetArrayVolumeDrink.resLenght();
-        arrayVolume_Drink = new String[v];
-        arrayVolume_Drink = inquiryGetArrayVolumeDrink.resVolume_Drink();
+        GetArrayOneColumnDTO getArrayOneColumnDTO = new GetArrayOneColumnDTO();
+        arrayVolume_Drink = getArrayOneColumnDTO.getArrayOneColumn("SELECT Volume_Drink FROM Drink WHERE Name_Drink='"+SelectNameDrink+"' GROUP BY Volume_Drink","Volume_Drink");
         FillingListViewVolumeDrink(arrayVolume_Drink);
     }
     //Метод заполнения ListView значениями наименований напитков

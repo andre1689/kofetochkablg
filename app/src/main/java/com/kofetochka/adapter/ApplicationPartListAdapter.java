@@ -6,6 +6,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.kofetochka.dto.ApplicationPartDTO;
@@ -42,8 +44,8 @@ public class ApplicationPartListAdapter extends RecyclerView.Adapter<Application
     public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         CardView cardView;
-        TextView tv_Title, tv_Subtitle, tv_Free, tv_Price;
-        Button btn_delete, btn_edit;
+        TextView tv_Title, tv_Subtitle, tv_Free, tv_Price, tv_ID_AP;
+        ImageView iv_Edit, iv_Copy, iv_Delete, iv_Free;
 
         public ViewHolder(final View itemView) {
             super(itemView);
@@ -52,10 +54,15 @@ public class ApplicationPartListAdapter extends RecyclerView.Adapter<Application
             tv_Free = (TextView) itemView.findViewById(R.id.textView_Free);
             tv_Price = (TextView) itemView.findViewById(R.id.textView_Price);
             tv_Subtitle = (TextView) itemView.findViewById(R.id.textView_Subtitle);
-            btn_delete = (Button) itemView.findViewById(R.id.button_Delete);
-            btn_edit = (Button) itemView.findViewById(R.id.button_Edit);
-            btn_delete.setOnClickListener(this);
-            btn_edit.setOnClickListener(this);
+            tv_ID_AP = (TextView) itemView.findViewById(R.id.textView_ID_AP);
+            iv_Copy = (ImageView) itemView.findViewById(R.id.imageView_Copy);
+            iv_Copy.setOnClickListener(this);
+            iv_Edit = (ImageView) itemView.findViewById(R.id.imageView_Edit);
+            iv_Edit.setOnClickListener(this);
+            iv_Delete = (ImageView) itemView.findViewById(R.id.imageView_Delete);
+            iv_Delete.setOnClickListener(this);
+            iv_Free = (ImageView) itemView.findViewById(R.id.imageView_Free);
+            iv_Free.setOnClickListener(this);
         }
 
         @Override
@@ -78,6 +85,7 @@ public class ApplicationPartListAdapter extends RecyclerView.Adapter<Application
         holder.tv_Title.setText(data.get(position).getTitle());
         holder.tv_Price.setText(data.get(position).getPrice());
         holder.tv_Subtitle.setText(data.get(position).getSubtitle());
+        holder.tv_ID_AP.setText(data.get(position).getID_AP());
     }
 
     @Override

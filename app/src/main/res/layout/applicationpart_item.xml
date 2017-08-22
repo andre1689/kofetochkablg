@@ -63,14 +63,15 @@
                 android:layout_alignLeft="@+id/textView_Subtitle"
                 android:layout_alignStart="@+id/textView_Subtitle"
                 android:layout_below="@+id/textView_Subtitle"
-                android:layout_toLeftOf="@+id/imageView"
+                android:layout_toLeftOf="@+id/textView"
+                android:layout_toStartOf="@+id/textView"
                 android:layout_weight="1"
                 android:text="Free"
                 android:textSize="14dp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="48dp"
+                android:layout_height="24dp"
                 android:layout_alignEnd="@+id/imageView"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
@@ -82,39 +83,32 @@
                 android:orientation="horizontal"
                 android:weightSum="1">
 
-                <Button
-                    android:id="@+id/button_Edit"
-                    style="@android:style/Widget.Material.Button.Borderless"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="6dp"
-                    android:layout_marginRight="8dp"
-                    android:layout_marginTop="6dp"
-                    android:paddingLeft="16dp"
-                    android:paddingRight="16dp"
-                    android:text="Редактировать"
-                    android:textColor="@color/colorPrimary" />
+                <ImageView
+                    android:id="@+id/imageView_Copy"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_marginRight="16dp"
+                    app:srcCompat="@mipmap/ic_content_copy_black_24dp" />
 
-                <Button
-                    android:id="@+id/button_Delete"
-                    style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
-                    android:layout_width="wrap_content"
+                <ImageView
+                    android:id="@+id/imageView_Edit"
+                    android:layout_width="24dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="6dp"
-                    android:layout_marginTop="6dp"
-                    android:layout_marginRight="8dp"
-                    android:text="Удалить"
-                    android:textColor="@color/colorPrimary" />
+                    android:layout_marginRight="16dp"
+                    app:srcCompat="@mipmap/ic_mode_edit_black_24dp" />
 
-                <Button
-                    android:id="@+id/button_Free"
-                    style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="6dp"
-                    android:layout_marginTop="6dp"
-                    android:text="Бесплатно"
-                    android:textColor="@color/colorPrimary" />
+                <ImageView
+                    android:id="@+id/imageView_Delete"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_marginRight="16dp"
+                    app:srcCompat="@mipmap/ic_delete_black_24dp" />
+
+                <ImageView
+                    android:id="@+id/imageView_Free"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    app:srcCompat="@mipmap/ic_money_off_black_24dp" />
 
                 <TextView
                     android:id="@+id/textView_Price"
@@ -126,6 +120,16 @@
                     android:text="Price"
                     android:textSize="20dp" />
             </LinearLayout>
+
+            <TextView
+                android:id="@+id/textView_ID_AP"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/textView_Subtitle"
+                android:layout_toLeftOf="@+id/imageView"
+                android:layout_toStartOf="@+id/imageView"
+                android:text="TextView"
+                android:visibility="visible" />
 
         </RelativeLayout>
 

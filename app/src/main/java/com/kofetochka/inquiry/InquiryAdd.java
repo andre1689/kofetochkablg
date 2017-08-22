@@ -42,7 +42,7 @@ public class InquiryAdd extends Thread{
 
         try {
             HttpClient httpClient = new DefaultHttpClient();
-            HttpPost httpPost = new HttpPost("http://146143.simplecloud.club/kofetochkablg/add.php");
+            HttpPost httpPost = new HttpPost("http://89.223.30.100/kofetochkablg/add_entry.php");
             httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs,"UTF-8"));
             HttpResponse httpResponse = httpClient.execute(httpPost);
             HttpEntity httpEntity = httpResponse.getEntity();

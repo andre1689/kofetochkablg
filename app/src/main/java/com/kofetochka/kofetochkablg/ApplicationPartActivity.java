@@ -13,7 +13,9 @@ import android.widget.Toast;
 
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.kofetochka.adapter.ApplicationPartListAdapter;
+import com.kofetochka.dto.AddEntryDTO;
 import com.kofetochka.dto.ApplicationPartDTO;
+import com.kofetochka.dto.GetOneResDTO;
 import com.kofetochka.inquiry.InquiryGetArrayOneColumn;
 import com.kofetochka.inquiry.InquiryGetOneRes;
 
@@ -74,11 +76,15 @@ public class ApplicationPartActivity extends AppCompatActivity{
             @Override
             public void onItemClick(View itemView, int position, View view) {
                 switch (view.getId()) {
-                    case R.id.button_Edit:
+                    case R.id.imageView_Copy:
                         CopyItem(position);
                         break;
-                    case R.id.button_Delete:
+                    case R.id.imageView_Delete:
                         DeleteItem(position);
+                        break;
+                    case R.id.imageView_Edit:
+                        break;
+                    case R.id.imageView_Free:
                         break;
                 }
             }
@@ -86,8 +92,13 @@ public class ApplicationPartActivity extends AppCompatActivity{
     }
 
     private void CopyItem(int position){
+        GetOneResDTO getOneResDTO = new GetOneResDTO();
+        AddEntryDTO addEntryDTO = new AddEntryDTO();
         //Скопируем элемент с индексом position и вставим копию в следующую позицию
         ApplicationPartDTO currentPerson = DataSet.get(position);
+        String ID_AP_position = DataSet.get(position).getID_AP();
+        getOneResDTO.getOneResDTO("SELECT ","");
+
         recyclerAdapter.addItem(position + 1, currentPerson);
         //Известим адаптер о добавлении элемента
         recyclerAdapter.notifyItemInserted(position + 1);
@@ -141,7 +152,6 @@ public class ApplicationPartActivity extends AppCompatActivity{
 
             String Additives = "";
             array_additives = getArrayOneColumn("SELECT ID_Additives FROM ApplicationPart_Additives WHERE ID_AP='" + array_ID_AP[i] + "'", "ID_Additives");
-            Toast.makeText(this, Integer.toString(lenghtAdditives), Toast.LENGTH_SHORT).show();
             if (lenghtAdditives > 0) {
                 Additives = "Добавки:";
                 for (int j = 0; j < lenghtAdditives; j++) {
@@ -149,7 +159,7 @@ public class ApplicationPartActivity extends AppCompatActivity{
                     Additives += " ";
                 }
             }
-            DataSet.add(new ApplicationPartDTO(Name_Drink + "  " + Volume_Drink + " мл.", Additives + Syrup, Sum_AP + " руб."));
+            DataSet.add(new ApplicationPartDTO(Name_Drink + "  " + Volume_Drink + " мл.", Additives + Syrup, Sum_AP + " руб.", array_ID_AP[i]));
         }
         return DataSet;
     }
