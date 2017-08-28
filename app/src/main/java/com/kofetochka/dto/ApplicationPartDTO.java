@@ -7,13 +7,20 @@ public class ApplicationPartDTO {
     private String ID_AP;
 
     public ApplicationPartDTO(String title, String subtitle, String price, String id_ap) {
-
         this.title = title;
         this.subtitle = subtitle;
         this.price = price;
         this.ID_AP = id_ap;
     }
 
+    public void setTitle (String title)
+    {
+     this.title = title;
+    }
+    public void setID_AP (String id_ap)
+    {
+        this.ID_AP = id_ap;
+    }
     public String getSubtitle(){
         return subtitle;
     }

@@ -15,6 +15,7 @@ import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.kofetochka.adapter.ApplicationPartListAdapter;
 import com.kofetochka.dto.AddEntryDTO;
 import com.kofetochka.dto.ApplicationPartDTO;
+import com.kofetochka.dto.DeleteEntryDTO;
 import com.kofetochka.dto.GetOneResDTO;
 import com.kofetochka.inquiry.InquiryGetArrayOneColumn;
 import com.kofetochka.inquiry.InquiryGetOneRes;
@@ -97,14 +98,32 @@ public class ApplicationPartActivity extends AppCompatActivity{
         //Скопируем элемент с индексом position и вставим копию в следующую позицию
         ApplicationPartDTO currentPerson = DataSet.get(position);
         String ID_AP_position = DataSet.get(position).getID_AP();
-        getOneResDTO.getOneResDTO("SELECT ","");
-
-        recyclerAdapter.addItem(position + 1, currentPerson);
+        String ID_Application_position = getOneResDTO.getOneResDTO("SELECT ID_Application FROM Application_Part WHERE ID_AP='"+ID_AP_position+"'","ID_Application");
+        String ID_Drink_position = getOneResDTO.getOneResDTO("SELECT ID_Drink FROM Application_Part WHERE ID_AP='"+ID_AP_position+"'","ID_Drink");
+        //String ID_Free_position = getOneResDTO.getOneResDTO("SELECT ID_Free FROM Application_Part WHERE ID_AP='"+ID_AP_position+"'","ID_Free");
+        String Sum_AP_position = getOneResDTO.getOneResDTO("SELECT Sum_AP FROM Application_Part WHERE ID_AP='"+ID_AP_position+"'","Sum_AP");
+        //Получение максимального значения ID_AP
+        String Max_AP = getOneResDTO.getOneResDTO("SELECT MAX(ID_AP) AS ID_AP FROM Application_Part","ID_AP");
+        //Добавляем запись в таблицу Application_Part
+        String ID_AP;
+        if (Max_AP=="null"){ //если таблица Application_Part пустая
+            ID_AP = "1";
+            addEntryDTO.AddEntry("Application_Part", "(`ID_AP`, `ID_Application`, `ID_Drink`, `Sum_AP`)", "('1', '" + ID_Application_position +"', '"+ID_Drink_position+"', '"+Sum_AP_position+"')");
+        } else { //если в таблице Application_Part есть записи
+            int AP = Integer.parseInt(Max_AP) + 1;
+            ID_AP = Integer.toString(AP);
+            addEntryDTO.AddEntry("Application_Part", "(`ID_AP`, `ID_Application`, `ID_Drink`, `Sum_AP`)", "('" + ID_AP + "', '" + ID_Application_position +"', '"+ID_Drink_position+"', '"+Sum_AP_position+"')");
+        }
+        ApplicationPartDTO newAPDTO = new ApplicationPartDTO(DataSet.get(position).getTitle(),DataSet.get(position).getSubtitle(), DataSet.get(position).getPrice(), ID_AP);
+        recyclerAdapter.addItem(position + 1,newAPDTO);
         //Известим адаптер о добавлении элемента
         recyclerAdapter.notifyItemInserted(position + 1);
     }
 
     private void DeleteItem(int position){
+        DeleteEntryDTO deleteEntryDTO = new DeleteEntryDTO();
+        String res = deleteEntryDTO.DeleteEntry("DELETE FROM `Application_Part` WHERE `ID_AP` ="+DataSet.get(position).getID_AP());
+        Toast.makeText(this, res, Toast.LENGTH_SHORT).show();
         //Удалим элемент из набора данных адаптера
         recyclerAdapter.deleteItem(position);
         //И уведомим об этом адаптер
@@ -136,13 +155,16 @@ public class ApplicationPartActivity extends AppCompatActivity{
 
     public List<ApplicationPartDTO> getDataSet() {
         DataSet = new ArrayList();
-        for (int i = 0; i < lenghtAP; i++){
-            String ID_Drink = getOneRes("SELECT ID_Drink FROM Application_Part WHERE ID_AP='" + array_ID_AP[i] + "'", "ID_Drink");
-            String Sum_AP = getOneRes("SELECT Sum_AP FROM Application_Part WHERE ID_AP='" + array_ID_AP[i] + "'", "Sum_AP");
+        DataSet.clear();
+        String[] array_ID_AP_list = getArrayOneColumn("SELECT ID_AP FROM Application_Part WHERE ID_Application='"+ID_Application+"'","ID_AP");
+        int lenghtAP_list = array_ID_AP_list.length;
+        for (int i = 0; i < lenghtAP_list; i++){
+            String ID_Drink = getOneRes("SELECT ID_Drink FROM Application_Part WHERE ID_AP='" + array_ID_AP_list[i] + "'", "ID_Drink");
+            String Sum_AP = getOneRes("SELECT Sum_AP FROM Application_Part WHERE ID_AP='" + array_ID_AP_list[i] + "'", "Sum_AP");
             String Name_Drink = getOneRes("SELECT Name_Drink FROM Drink WHERE ID_Drink='" + ID_Drink + "'", "Name_Drink");
             String Volume_Drink = getOneRes("SELECT Volume_Drink FROM Drink WHERE ID_Drink='" + ID_Drink + "'", "Volume_Drink");
 
-            String ID_Syrup = getOneRes("SELECT ID_Syrup FROM ApplicationPart_Syrup WHERE ID_AP='" + array_ID_AP[i] + "'", "ID_Syrup");
+            String ID_Syrup = getOneRes("SELECT ID_Syrup FROM ApplicationPart_Syrup WHERE ID_AP='" + array_ID_AP_list[i] + "'", "ID_Syrup");
             String Syrup = getOneRes("SELECT Name_Syrup FROM Syrup WHERE ID_Syrup='" + ID_Syrup + "'", "Name_Syrup");
             if (Syrup != null) {
                 Syrup = "Сироп:" + Syrup;
@@ -151,7 +173,7 @@ public class ApplicationPartActivity extends AppCompatActivity{
             }
 
             String Additives = "";
-            array_additives = getArrayOneColumn("SELECT ID_Additives FROM ApplicationPart_Additives WHERE ID_AP='" + array_ID_AP[i] + "'", "ID_Additives");
+            array_additives = getArrayOneColumn("SELECT ID_Additives FROM ApplicationPart_Additives WHERE ID_AP='" + array_ID_AP_list[i] + "'", "ID_Additives");
             if (lenghtAdditives > 0) {
                 Additives = "Добавки:";
                 for (int j = 0; j < lenghtAdditives; j++) {
@@ -159,7 +181,8 @@ public class ApplicationPartActivity extends AppCompatActivity{
                     Additives += " ";
                 }
             }
-            DataSet.add(new ApplicationPartDTO(Name_Drink + "  " + Volume_Drink + " мл.", Additives + Syrup, Sum_AP + " руб.", array_ID_AP[i]));
+            DataSet.add(new ApplicationPartDTO(Name_Drink + "  " + Volume_Drink + " мл.", Additives + Syrup, Sum_AP + " руб.", array_ID_AP_list[i]));
+
         }
         return DataSet;
     }
