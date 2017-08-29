@@ -2,21 +2,28 @@ package com.kofetochka.kofetochkablg;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.kofetochka.adapter.ApplicationPartListAdapter;
 import com.kofetochka.dto.AddEntryDTO;
 import com.kofetochka.dto.ApplicationPartDTO;
 import com.kofetochka.dto.DeleteEntryDTO;
+import com.kofetochka.dto.GetArrayOneColumnDTO;
 import com.kofetochka.dto.GetOneResDTO;
+import com.kofetochka.dto.UpdateEntryDTO;
 import com.kofetochka.inquiry.InquiryGetArrayOneColumn;
 import com.kofetochka.inquiry.InquiryGetOneRes;
 
@@ -76,58 +83,249 @@ public class ApplicationPartActivity extends AppCompatActivity{
         recyclerAdapter.setOnItemClickListener(new ApplicationPartListAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View itemView, int position, View view) {
-                switch (view.getId()) {
-                    case R.id.imageView_Copy:
-                        CopyItem(position);
-                        break;
-                    case R.id.imageView_Delete:
-                        DeleteItem(position);
-                        break;
-                    case R.id.imageView_Edit:
-                        break;
-                    case R.id.imageView_Free:
-                        break;
-                }
+                ShowPopupMenuMain(view,position);
             }
         });
     }
-
+    //Копирование item
     private void CopyItem(int position){
         GetOneResDTO getOneResDTO = new GetOneResDTO();
         AddEntryDTO addEntryDTO = new AddEntryDTO();
-        //Скопируем элемент с индексом position и вставим копию в следующую позицию
-        ApplicationPartDTO currentPerson = DataSet.get(position);
+        //Узнаем ID_AP копируемого item
         String ID_AP_position = DataSet.get(position).getID_AP();
+        //По ID_AP копируемого item узнаем все остальные данные необходимые для копирования
         String ID_Application_position = getOneResDTO.getOneResDTO("SELECT ID_Application FROM Application_Part WHERE ID_AP='"+ID_AP_position+"'","ID_Application");
         String ID_Drink_position = getOneResDTO.getOneResDTO("SELECT ID_Drink FROM Application_Part WHERE ID_AP='"+ID_AP_position+"'","ID_Drink");
-        //String ID_Free_position = getOneResDTO.getOneResDTO("SELECT ID_Free FROM Application_Part WHERE ID_AP='"+ID_AP_position+"'","ID_Free");
         String Sum_AP_position = getOneResDTO.getOneResDTO("SELECT Sum_AP FROM Application_Part WHERE ID_AP='"+ID_AP_position+"'","Sum_AP");
-        //Получение максимального значения ID_AP
-        String Max_AP = getOneResDTO.getOneResDTO("SELECT MAX(ID_AP) AS ID_AP FROM Application_Part","ID_AP");
-        //Добавляем запись в таблицу Application_Part
-        String ID_AP;
-        if (Max_AP=="null"){ //если таблица Application_Part пустая
-            ID_AP = "1";
-            addEntryDTO.AddEntry("Application_Part", "(`ID_AP`, `ID_Application`, `ID_Drink`, `Sum_AP`)", "('1', '" + ID_Application_position +"', '"+ID_Drink_position+"', '"+Sum_AP_position+"')");
-        } else { //если в таблице Application_Part есть записи
-            int AP = Integer.parseInt(Max_AP) + 1;
-            ID_AP = Integer.toString(AP);
-            addEntryDTO.AddEntry("Application_Part", "(`ID_AP`, `ID_Application`, `ID_Drink`, `Sum_AP`)", "('" + ID_AP + "', '" + ID_Application_position +"', '"+ID_Drink_position+"', '"+Sum_AP_position+"')");
+        //если стаканчик бесплатный
+        if (Integer.parseInt(Sum_AP_position)==0)
+        {
+            //Выводим сообщение о невозможности его копирования
+            new MaterialDialog.Builder(ApplicationPartActivity.this)
+                    .title("Сообщение")
+                    .positiveColorRes(R.color.colorPrimary)
+                    .content("Неозможно скопировать бесплатный стаканчик")
+                    .positiveText("Ok")
+                    .cancelable(false)
+                    .show();
+        } else {
+            //Получение максимального значения ID_AP
+            String Max_AP = getOneResDTO.getOneResDTO("SELECT MAX(ID_AP) AS ID_AP FROM Application_Part", "ID_AP");
+            //Добавляем запись в таблицу Application_Part
+            String ID_AP; //Переменная для хранения нового ID_AP
+            if (Max_AP == "null") { //если таблица Application_Part пустая
+                ID_AP = "1";
+                addEntryDTO.AddEntry("Application_Part", "(`ID_AP`, `ID_Application`, `ID_Drink`, `Sum_AP`)", "('1', '" + ID_Application_position + "', '" + ID_Drink_position + "', '" + Sum_AP_position + "')");
+            } else { //если в таблице Application_Part есть записи
+                int AP = Integer.parseInt(Max_AP) + 1;
+                ID_AP = Integer.toString(AP);
+                addEntryDTO.AddEntry("Application_Part", "(`ID_AP`, `ID_Application`, `ID_Drink`, `Sum_AP`)", "('" + ID_AP + "', '" + ID_Application_position + "', '" + ID_Drink_position + "', '" + Sum_AP_position + "')");
+            }
+            //Проверяем есть ли в копируемом item сиропы
+            String ID_Syrup_position = getOneResDTO.getOneResDTO("SELECT ID_Syrup FROM ApplicationPart_Syrup WHERE ID_AP='" + ID_AP_position + "'", "ID_Syrup");
+            //Если сироп есть, то добавляем запись в таблицу ApplicationPart_Syrup с новым ID_AP
+            if (ID_Syrup_position != null) {
+                addEntryDTO.AddEntry("ApplicationPart_Syrup", "(`ID_AP`, `ID_Syrup`)", "('" + ID_AP + "', '" + ID_Syrup_position + "')");
+            }
+            //Проверяем есть ли в копируемом item добавки
+            GetArrayOneColumnDTO getArrayOneColumnDTO = new GetArrayOneColumnDTO();
+            String[] ArrayAdditives = getArrayOneColumnDTO.getArrayOneColumn("SELECT ID_Additives FROM ApplicationPart_Additives WHERE ID_AP='" + ID_AP_position + "'", "ID_Additives");
+            //Количество добавок
+            int LengthAdditives = getArrayOneColumnDTO.getLenght();
+            //Если добавка одна
+            if (LengthAdditives == 1) {
+                //кипруем добавку в новым ID_AP
+                addEntryDTO.AddEntry("ApplicationPart_Additives", "(`ID_AP`, `ID_Additives`)", "('" + ID_AP + "', '" + ArrayAdditives[0] + "')");
+                //Если добавок больше 1
+            } else if (LengthAdditives > 1) {
+                //С помощью цыкла записываем все добавки в БД с новым ID_AP
+                for (int i = 0; i < ArrayAdditives.length; i++) {
+                    addEntryDTO.AddEntry("ApplicationPart_Additives", "(`ID_AP`, `ID_Additives`)", "('" + ID_AP + "', '" + ArrayAdditives[i] + "')");
+                }
+            }
+            //Добавляем копию item в RecycleeView
+            ApplicationPartDTO newAPDTO = new ApplicationPartDTO(DataSet.get(position).getTitle(), DataSet.get(position).getSyrup(), DataSet.get(position).getAdditives(), DataSet.get(position).getPrice(), ID_AP, "");
+            recyclerAdapter.addItem(position + 1, newAPDTO);
+            //Известим адаптер о добавлении элемента
+            recyclerAdapter.notifyItemInserted(position + 1);
         }
-        ApplicationPartDTO newAPDTO = new ApplicationPartDTO(DataSet.get(position).getTitle(),DataSet.get(position).getSubtitle(), DataSet.get(position).getPrice(), ID_AP);
-        recyclerAdapter.addItem(position + 1,newAPDTO);
-        //Известим адаптер о добавлении элемента
-        recyclerAdapter.notifyItemInserted(position + 1);
     }
+    //Редактирование item
+    private void EditItem(int position){
+        String ID_AP_position = DataSet.get(position).getID_AP();
 
-    private void DeleteItem(int position){
-        DeleteEntryDTO deleteEntryDTO = new DeleteEntryDTO();
-        String res = deleteEntryDTO.DeleteEntry("DELETE FROM `Application_Part` WHERE `ID_AP` ="+DataSet.get(position).getID_AP());
-        Toast.makeText(this, res, Toast.LENGTH_SHORT).show();
-        //Удалим элемент из набора данных адаптера
-        recyclerAdapter.deleteItem(position);
-        //И уведомим об этом адаптер
-        recyclerAdapter.notifyItemRemoved(position);
+    }
+    //Удаление item
+    private void DeleteItem(final int position){
+        final DeleteEntryDTO deleteEntryDTO = new DeleteEntryDTO();
+        new MaterialDialog.Builder(this)
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        String res = deleteEntryDTO.DeleteEntry("DELETE FROM `Application_Part` WHERE `ID_AP` ="+DataSet.get(position).getID_AP());
+                        //Удалим элемент из набора данных адаптера
+                        recyclerAdapter.deleteItem(position);
+                        //И уведомим об этом адаптер
+                        recyclerAdapter.notifyItemRemoved(position);
+                    }
+                })
+                /*.onNegative(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+
+                    }
+                })*/
+                .title("Сообщение")
+                .positiveColorRes(R.color.colorPrimary)
+                .negativeColorRes(R.color.colorPrimary)
+                .content("Вы действительно хотите удалить выбранный пункт?")
+                .positiveText("ДА")
+                .negativeText("НЕТ")
+                .cancelable(false)
+                .show();
+        //String res = deleteEntryDTO.DeleteEntry("DELETE FROM `Application_Part` WHERE `ID_AP` ="+DataSet.get(position).getID_AP());
+        //Toast.makeText(this, res, Toast.LENGTH_SHORT).show();
+
+    }
+    //Всплывающее меню item
+    private void ShowPopupMenuMain (final View v, final int position){
+        PopupMenu popupMenu = new PopupMenu(this, v);
+        popupMenu.inflate(R.menu.popupmenu_ap);
+        //Обработчик нажатия на пункт меню
+        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                switch (item.getItemId()){
+                    //Если выбрано Копировать
+                    case R.id.menu_copy:
+                        CopyItem(position);
+                        return true;
+                    //Если выбрано Редактировать
+                    case R.id.menu_edit:
+                        Toast.makeText(ApplicationPartActivity.this, "Menu edit", Toast.LENGTH_SHORT).show();
+                        return true;
+                    //Если выбрано Удалить
+                    case R.id.menu_delete:
+                        DeleteItem(position);
+                        return true;
+                    //Если выбрано Бемплатно
+                    case R.id.menu_free:
+                        ShowPopupMenu(v,position);
+                        return true;
+                    default:
+                        return false;
+                }
+            }
+        });
+        /*popupMenu.setOnDismissListener(new PopupMenu.OnDismissListener() {
+            @Override
+            public void onDismiss(PopupMenu menu) {
+                Toast.makeText(ApplicationPartActivity.this, "onDismiss", Toast.LENGTH_SHORT).show();
+            }
+        });*/
+        popupMenu.show();
+    }
+    //Всплывающее подменю меню "Бесплатно"
+    private void ShowPopupMenu(View v, final int position){
+        PopupMenu popupMenu = new PopupMenu(this, v);
+        popupMenu.inflate(R.menu.popupmenu_free);
+        //Обрабочик нажатия на пункт меню
+        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                //Узнаем ID_AP выбранного item
+                String ID_AP_position = DataSet.get(position).getID_AP();
+                //Переменная для записи результата обновления данных в БД
+                String res;
+                //Переменная для сравнения при удачной записи в БД
+                String succes = "Запись обновлена";
+                switch (item.getItemId()){
+                    case R.id.menu2:
+                        res = SetFreeDrink(ID_AP_position,getString(R.string.item2));
+                        if (res.equals(succes))
+                        {
+                            DataSet.get(position).setFree(getString(R.string.item2));
+                            DataSet.get(position).setPrice("0 руб.");
+                            recyclerAdapter.notifyDataSetChanged();
+                        } else {
+                            new MaterialDialog.Builder(ApplicationPartActivity.this)
+                                    .title("Сообщение")
+                                    .positiveColorRes(R.color.colorPrimary)
+                                    .content(res)
+                                    .positiveText("Ok")
+                                    .cancelable(false)
+                                    .show();
+                        }
+                        return true;
+                    case R.id.menu3:
+                        res = SetFreeDrink(ID_AP_position,getString(R.string.item3));
+                        if (res.equals(succes))
+                        {
+                            DataSet.get(position).setFree(getString(R.string.item3));
+                            DataSet.get(position).setPrice("0 руб.");
+                            recyclerAdapter.notifyDataSetChanged();
+                        } else {
+                            new MaterialDialog.Builder(ApplicationPartActivity.this)
+                                    .title("Сообщение")
+                                    .positiveColorRes(R.color.colorPrimary)
+                                    .content(res)
+                                    .positiveText("Ok")
+                                    .cancelable(false)
+                                    .show();
+                        }
+                        return true;
+                    case R.id.menu4:
+                        res = SetFreeDrink(ID_AP_position,getString(R.string.item4));
+                        if (res.equals(succes))
+                        {
+                            DataSet.get(position).setFree(getString(R.string.item4));
+                            DataSet.get(position).setPrice("0 руб.");
+                            recyclerAdapter.notifyDataSetChanged();
+                        } else {
+                            new MaterialDialog.Builder(ApplicationPartActivity.this)
+                                    .title("Сообщение")
+                                    .positiveColorRes(R.color.colorPrimary)
+                                    .content(res)
+                                    .positiveText("Ok")
+                                    .cancelable(false)
+                                    .show();
+                        }
+                        return true;
+                    case R.id.menu5:
+                        res = SetFreeDrink(ID_AP_position,getString(R.string.item5));
+                        if (res.equals(succes))
+                        {
+                            DataSet.get(position).setFree(getString(R.string.item5));
+                            DataSet.get(position).setPrice("0 руб.");
+                            recyclerAdapter.notifyDataSetChanged();
+                        } else {
+                            new MaterialDialog.Builder(ApplicationPartActivity.this)
+                                    .title("Сообщение")
+                                    .positiveColorRes(R.color.colorPrimary)
+                                    .content(res)
+                                    .positiveText("Ok")
+                                    .cancelable(false)
+                                    .show();
+                        }
+                        return true;
+                    default:
+                        return false;
+                }
+            }
+        });
+
+        /*popupMenu.setOnDismissListener(new PopupMenu.OnDismissListener() {
+            @Override
+            public void onDismiss(PopupMenu menu) {
+                Toast.makeText(ApplicationPartActivity.this, "onDismiss", Toast.LENGTH_SHORT).show();
+            }
+        });*/
+        popupMenu.show();
+    }
+    //Добовляем в БД информацию о бесплатном стаканчике согласно выбранному в меню пункту и устанавливаем сумму равной 0
+    private String SetFreeDrink(String ID_AP, String Free){
+        UpdateEntryDTO updateEntryDTO = new UpdateEntryDTO();
+        return updateEntryDTO.Update("UPDATE `Application_Part` SET `Free`='"+Free+"', `Sum_AP`='0' WHERE `ID_AP`='"+ID_AP+"'");
     }
 
     private String[] getArrayOneColumn(String inquiry, String column){
@@ -181,7 +379,7 @@ public class ApplicationPartActivity extends AppCompatActivity{
                     Additives += " ";
                 }
             }
-            DataSet.add(new ApplicationPartDTO(Name_Drink + "  " + Volume_Drink + " мл.", Additives + Syrup, Sum_AP + " руб.", array_ID_AP_list[i]));
+            DataSet.add(new ApplicationPartDTO(Name_Drink + "  " + Volume_Drink + " мл.", Syrup, Additives, Sum_AP + " руб.", array_ID_AP_list[i],""));
 
         }
         return DataSet;

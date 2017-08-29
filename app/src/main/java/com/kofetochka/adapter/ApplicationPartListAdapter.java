@@ -5,8 +5,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -44,25 +42,22 @@ public class ApplicationPartListAdapter extends RecyclerView.Adapter<Application
     public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         CardView cardView;
-        TextView tv_Title, tv_Subtitle, tv_Free, tv_Price, tv_ID_AP;
-        ImageView iv_Edit, iv_Copy, iv_Delete, iv_Free;
+        TextView tv_Title, tv_Syrup, tv_Additives, tv_Free, tv_Price, tv_ID_AP;
+        ImageView iv_Menu;
 
         public ViewHolder(final View itemView) {
             super(itemView);
             cardView = (CardView) itemView.findViewById(R.id.card_view_applicationpart);
+
             tv_Title = (TextView) itemView.findViewById(R.id.textView_Title);
+            tv_Syrup = (TextView) itemView.findViewById(R.id.textView_Surup);
+            tv_Additives = (TextView) itemView.findViewById(R.id.textView_Additives);
             tv_Free = (TextView) itemView.findViewById(R.id.textView_Free);
             tv_Price = (TextView) itemView.findViewById(R.id.textView_Price);
-            tv_Subtitle = (TextView) itemView.findViewById(R.id.textView_Subtitle);
             tv_ID_AP = (TextView) itemView.findViewById(R.id.textView_ID_AP);
-            iv_Copy = (ImageView) itemView.findViewById(R.id.imageView_Copy);
-            iv_Copy.setOnClickListener(this);
-            iv_Edit = (ImageView) itemView.findViewById(R.id.imageView_Edit);
-            iv_Edit.setOnClickListener(this);
-            iv_Delete = (ImageView) itemView.findViewById(R.id.imageView_Delete);
-            iv_Delete.setOnClickListener(this);
-            iv_Free = (ImageView) itemView.findViewById(R.id.imageView_Free);
-            iv_Free.setOnClickListener(this);
+
+            iv_Menu = (ImageView) itemView.findViewById(R.id.imageView_menu);
+            iv_Menu.setOnClickListener(this);
         }
 
         @Override
@@ -84,7 +79,9 @@ public class ApplicationPartListAdapter extends RecyclerView.Adapter<Application
     public void onBindViewHolder(ViewHolder holder, int position) {
         holder.tv_Title.setText(data.get(position).getTitle());
         holder.tv_Price.setText(data.get(position).getPrice());
-        holder.tv_Subtitle.setText(data.get(position).getSubtitle());
+        holder.tv_Syrup.setText(data.get(position).getSyrup());
+        holder.tv_Additives.setText(data.get(position).getAdditives());
+        holder.tv_Free.setText(data.get(position).getFree());
         holder.tv_ID_AP.setText(data.get(position).getID_AP());
     }
 

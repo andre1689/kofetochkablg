@@ -17,5 +17,10 @@
     <string name="hint_Coffee_Drip">"Drip кофе *"</string>
     <string name="hint_Coffee_Exchenge">"Размен *"</string>
     <string name="error_OpenShift">"Заполните обязательные поля"</string>
+    <string name="item1">"Платно"</string>
+    <string name="item2">"Карточка"</string>
+    <string name="item3">"Бариста"</string>
+    <string name="item4">"На себя"</string>
+    <string name="item5">"Администрация"</string>
 
 </resources>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <group android:id="@+id/menugroup_main" >
+        <item
+            android:id="@+id/menu_copy"
+            android:icon="@mipmap/ic_content_copy_black_24dp"
+            android:title="Копировать" />
+        <item
+            android:id="@+id/menu_edit"
+            android:icon="@mipmap/ic_mode_edit_black_24dp"
+            android:title="Редактровать" />
+        <item
+            android:id="@+id/menu_delete"
+            android:icon="@mipmap/ic_delete_black_24dp"
+            android:title="Удалить" />
+        <item
+            android:id="@+id/menu_free"
+            android:icon="@mipmap/ic_money_off_black_24dp"
+            android:title="Бесплатно" />
+    </group>
+</menu>
