@@ -22,23 +22,22 @@ import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 
-public class InquiryGetShiftID_ID_CH extends Thread{
-    private String Date_Shift;
-    private String ID_CH;
-    private String Login;
-    private String ID_Shift;
+public class InquiryUpdateEntry extends Thread{
+    private String Query;
+    private String Res;
 
     private String Result = null;
     private String Line = null;
     InputStream InpStr = null;
 
     public void run(){
+        Log.e("Query",Query);
         ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-        nameValuePairs.add(new BasicNameValuePair("Date_Shift",Date_Shift));
-        nameValuePairs.add(new BasicNameValuePair("Login",Login));
+        nameValuePairs.add(new BasicNameValuePair("Query",Query));
+
         try {
             HttpClient httpClient = new DefaultHttpClient();
-            HttpPost httpPost = new HttpPost("http://146143.simplecloud.club/kofetochkablg/get_shift_id_and_id_ch.php");
+            HttpPost httpPost = new HttpPost("http://89.223.30.100/kofetochkablg/update_entry.php");
             httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs,"UTF-8"));
             HttpResponse httpResponse = httpClient.execute(httpPost);
             HttpEntity httpEntity = httpResponse.getEntity();
@@ -69,26 +68,19 @@ public class InquiryGetShiftID_ID_CH extends Thread{
 
         try {
             JSONObject json_data  = new JSONObject(Result);
-            ID_Shift = (json_data.getString("ID_Shift"));
-            ID_CH = (json_data.getString("ID_CH"));
+            Res = (json_data.getString("Message"));
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
     }
 
-    public void start (String date_Shift, String login){
-        this.Date_Shift = date_Shift;
-        this.Login = login;
+    public void start (String query){
+        this.Query = query;
         this.start();
     }
 
-    public String resID_Shift (){
-        return ID_Shift;
-    }
-
-    public String resID_CH (){
-        return ID_CH;
+    public String resSuccess (){
+        return Res;
     }
 }
-

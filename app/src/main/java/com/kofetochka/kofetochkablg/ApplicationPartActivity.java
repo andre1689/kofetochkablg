@@ -153,7 +153,10 @@ public class ApplicationPartActivity extends AppCompatActivity{
     //Редактирование item
     private void EditItem(int position){
         String ID_AP_position = DataSet.get(position).getID_AP();
-
+        Intent intent = new Intent(this,EditDrinkActivity.class);
+        intent.putExtra("Login", Login);
+        intent.putExtra("ID_AP",ID_AP_position);
+        startActivity(intent);
     }
     //Удаление item
     private void DeleteItem(final int position){
@@ -202,7 +205,7 @@ public class ApplicationPartActivity extends AppCompatActivity{
                         return true;
                     //Если выбрано Редактировать
                     case R.id.menu_edit:
-                        Toast.makeText(ApplicationPartActivity.this, "Menu edit", Toast.LENGTH_SHORT).show();
+                        EditItem(position);
                         return true;
                     //Если выбрано Удалить
                     case R.id.menu_delete:

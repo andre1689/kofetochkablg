@@ -4,30 +4,33 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.util.SparseBooleanArray;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ListView;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.kofetochka.adapter.AdditivesAdapter;
+import com.kofetochka.dto.AdditivesDTO;
 import com.kofetochka.dto.GetArrayOneColumnDTO;
 import com.kofetochka.dto.GetOneResDTO;
 import com.kofetochka.inquiry.InquiryAdd;
-import com.kofetochka.inquiry.InquiryGetArrayNameAdditives;
-import com.kofetochka.inquiry.InquiryGetArrayNameDrink;
-import com.kofetochka.inquiry.InquiryGetArrayNameSyrup;
-import com.kofetochka.inquiry.InquiryGetArrayVolumeDrink;
+
 import com.kofetochka.inquiry.InquiryGetOneRes;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class NewDrinkActivity extends AppCompatActivity{
 
@@ -45,6 +48,9 @@ public class NewDrinkActivity extends AppCompatActivity{
     private String Date;
     private String Login;
     private String Season;
+    List<AdditivesDTO> DataSet;
+    private RecyclerView.LayoutManager layoutManager;
+    AdditivesAdapter recyclerAdapter;
 
     String[] arrayName_Drink, arrayOneName_Drink, arrayVolume_Drink, arrayOneVolume_Drink, arrayOneSyrup, arrayNameAdditives, arrayNameSyrup, arrayCheckedNameAdditives;
     ListView lv_NameDrink, lv_VolumeDrink, lv_Additives, lv_Syrup;
@@ -135,34 +141,6 @@ public class NewDrinkActivity extends AppCompatActivity{
             }
         });
 
-        lv_Additives.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                choise = lv_Additives.getCount();
-                Summ = 0;
-                arrayCheckedNameAdditives = new String[choise];
-                SparseBooleanArray sparseBooleanArray = lv_Additives.getCheckedItemPositions();
-                for (int i = 0; i < choise; i++) {
-                    if (sparseBooleanArray.get(i) == true) {
-                        arrayCheckedNameAdditives[i] = lv_Additives.getItemAtPosition(i).toString();
-                        String ColumnAdditives = "Price_Additives";
-                        String QuiryAdditives = "SELECT "+ColumnAdditives+" FROM Additives WHERE Name_Additives='"+lv_Additives.getItemAtPosition(i).toString()+"'";
-                        inquiryGetOneRes = new InquiryGetOneRes();
-                        inquiryGetOneRes.start(QuiryAdditives,ColumnAdditives);
-                        try {
-                            inquiryGetOneRes.join();
-                        } catch (InterruptedException e) {
-                            Log.e("GetPriceAdditives",e.getMessage());
-                        }
-                        Summ += Integer.parseInt(inquiryGetOneRes.res());
-                    }
-                    tv_PriceAdditives2.setText(Integer.toString(Summ));
-                    setSumm();
-                }
-
-            }
-        });
-
         switch_additives.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -219,6 +197,7 @@ public class NewDrinkActivity extends AppCompatActivity{
                 }
             }
         });
+
     }
     //Метод инициализации элементов Activity
     private void InitializationElementsActivity() {
@@ -296,10 +275,41 @@ public class NewDrinkActivity extends AppCompatActivity{
     }
     //Метод заполнения ListView значениями наименований добавок
     private void FillingListViewNameAdditives(String[] arrayname_additives) {
-        A = arrayname_additives.length;
-        ArrayAdapter<String> adapter_additives = new ArrayAdapter<>(this, R.layout.list_item_check, arrayname_additives);
-        lv_Additives.setAdapter(adapter_additives);
-        Utility.setListViewHeightBasedOnChildren(lv_Additives);
+        if (arrayname_additives.length>0) {
+            final List<AdditivesDTO> myDataset = getDataSet();
+            RecyclerView rv = (RecyclerView) findViewById(R.id.recyclerView_Additives);
+            rv.setHasFixedSize(true);
+            layoutManager = new LinearLayoutManager(this);
+            rv.setLayoutManager(layoutManager);
+            recyclerAdapter = new AdditivesAdapter(myDataset);
+            rv.setAdapter(recyclerAdapter);
+            recyclerAdapter.setOnItemClickListener(new AdditivesAdapter.OnItemClickListener() {
+                @Override
+                public void onItemClick(View itemView, int position, View view) {
+                    boolean CheckBoxClick = DataSet.get(position).getCheckBox_Additives();
+                    if (CheckBoxClick) {
+                        DataSet.get(position).setCheckBox_Additives(false);
+                        recyclerAdapter.notifyDataSetChanged();
+                        tv_PriceAdditives2.setText(Integer.toString(Integer.parseInt(tv_PriceAdditives2.getText().toString()) - Integer.parseInt(DataSet.get(position).getPrice_Additives())));
+                        setSumm();
+                    } else {
+                        DataSet.get(position).setCheckBox_Additives(true);
+                        recyclerAdapter.notifyDataSetChanged();
+                        tv_PriceAdditives2.setText(Integer.toString(Integer.parseInt(tv_PriceAdditives2.getText().toString()) + Integer.parseInt(DataSet.get(position).getPrice_Additives())));
+                        setSumm();
+                    }
+                }
+            });
+        } else {
+            DataSet.clear();
+            final List<AdditivesDTO> myDataset = DataSet;
+            RecyclerView rv = (RecyclerView) findViewById(R.id.recyclerView_Additives);
+            rv.setHasFixedSize(true);
+            layoutManager = new LinearLayoutManager(this);
+            rv.setLayoutManager(layoutManager);
+            recyclerAdapter = new AdditivesAdapter(myDataset);
+            rv.setAdapter(recyclerAdapter);
+        }
     }
     //Метод заполнения ListView значениями наименований сиропов
     private void FillingListViewNameSyrup(String[] arrayname_syrup) {
@@ -343,15 +353,10 @@ public class NewDrinkActivity extends AppCompatActivity{
         }
 
         //Проверяем есть ли в напитке добавки
-        if(arrayCheckedNameAdditives.length>0) {//если добавки есть
-            SparseBooleanArray sparseBooleanArray = lv_Additives.getCheckedItemPositions();
-            //добовляем все добавки в таблицу ApplicationPart_Additives
-            for (int i = 0; i < arrayCheckedNameAdditives.length; i++) {
-                if (sparseBooleanArray.get(i) == true) {
-                    //Получаем значение ID_Additives
-                    String ID_Additives = getOneResDTO.getOneResDTO("SELECT ID_Additives FROM Additives WHERE Name_Additives='"+lv_Additives.getItemAtPosition(i).toString()+"'","ID_Additives");
-                    //Заносим запись в таблицу ApplicationPart_Additives
-                    AddEntry("ApplicationPart_Additives", "(`ID_AP`, `ID_Additives`)", "('" + ID_AP + "', '" +ID_Additives+"')");
+        if(arrayNameAdditives.length>0) {//если добавки есть
+            for(int i=0;i<arrayNameAdditives.length;i++){
+                if(DataSet.get(i).getCheckBox_Additives()){
+                    AddEntry("ApplicationPart_Additives", "(`ID_AP`, `ID_Additives`)", "('" + ID_AP + "', '" +DataSet.get(i).getID_Additives().toString()+"')");
                 }
             }
         }
@@ -378,5 +383,19 @@ public class NewDrinkActivity extends AppCompatActivity{
         } catch (InterruptedException e) {
             Log.e("Add", e.getMessage());
         }
+    }
+
+    public List<AdditivesDTO> getDataSet() {
+        GetArrayOneColumnDTO getArrayOneColumnDTO = new GetArrayOneColumnDTO();
+        DataSet = new ArrayList();
+        DataSet.clear();
+        String[] array_ID_Additives = getArrayOneColumnDTO.getArrayOneColumn("SELECT ID_Additives FROM Additives","ID_Additives");
+        String[] array_Name_Additives = getArrayOneColumnDTO.getArrayOneColumn("SELECT Name_Additives FROM Additives","Name_Additives");
+        String[] array_Price_Additives = getArrayOneColumnDTO.getArrayOneColumn("SELECT Price_Additives FROM Additives","Price_Additives");
+        int lenght_list = array_ID_Additives.length;
+        for (int i = 0; i < lenght_list; i++){
+            DataSet.add(new AdditivesDTO(array_ID_Additives[i],array_Name_Additives[i],array_Price_Additives[i],false));
+        }
+        return DataSet;
     }
 }

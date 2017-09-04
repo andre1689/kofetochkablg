@@ -19,11 +19,7 @@ import android.widget.Toast;
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.kofetochka.inquiry.InquiryAdd;
-import com.kofetochka.inquiry.InquiryAddStorage;
-import com.kofetochka.inquiry.InquiryGetID_St_OpenShift;
-import com.kofetochka.inquiry.InquiryGetNameCH;
 import com.kofetochka.inquiry.InquiryGetOneRes;
-import com.kofetochka.inquiry.InquiryGetShiftID_ID_CH;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;

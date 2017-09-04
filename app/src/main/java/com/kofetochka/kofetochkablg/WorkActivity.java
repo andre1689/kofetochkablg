@@ -53,6 +53,7 @@ public class WorkActivity extends AppCompatActivity {
                 Intent intent = new Intent(WorkActivity.this, NewDrinkActivity.class);
                 intent.putExtra("Login",Login);
                 intent.putExtra("ID_Application","0");
+                intent.putExtra("ID_AP","0");
                 startActivity(intent);
             }
         });
