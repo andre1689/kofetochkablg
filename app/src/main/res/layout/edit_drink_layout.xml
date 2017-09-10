@@ -113,11 +113,11 @@
 
             </LinearLayout>
 
-            <ListView
-                android:id="@+id/listView_Additives"
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recyclerView_Additives"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:choiceMode="multipleChoice" />
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
 
             <TextView
                 android:id="@+id/tv_line2"
@@ -266,24 +266,49 @@
                     android:text="руб."
                     android:textColor="@color/colorBlackText"
                     android:textSize="14sp" />
+
             </LinearLayout>
 
-            <Button
-                android:id="@+id/button_Save"
-                style="@android:style/Widget.Material.Button.Colored"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_gravity="right"
-                android:layout_marginBottom="8dp"
-                android:layout_marginRight="8dp"
-                android:layout_marginTop="32dp"
-                android:layout_weight="1"
-                android:backgroundTint="@color/colorPrimary"
-                android:onClick="addApplication"
-                android:paddingLeft="16dp"
-                android:paddingRight="16dp"
-                android:text="Сохранить"
-                android:textColor="@color/colorBlackText" />
+                android:layout_marginTop="16dp"
+                android:gravity="right"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/button_Cancel"
+                    style="@android:style/Widget.Material.Button.Colored"
+                    astyle="@android:style/Widget.Material.Button.Colored"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="right"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginRight="8dp"
+                    android:layout_marginTop="16dp"
+                    android:backgroundTint="@color/colorPrimary"
+                    android:paddingLeft="16dp"
+                    android:paddingRight="16dp"
+                    android:text="Отмена"
+                    android:textColor="@color/colorBlackText" />
+
+                <Button
+                    android:id="@+id/button_Save"
+                    style="@android:style/Widget.Material.Button.Colored"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="right"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginRight="8dp"
+                    android:layout_marginTop="16dp"
+                    android:backgroundTint="@color/colorPrimary"
+                    android:paddingLeft="16dp"
+                    android:paddingRight="16dp"
+                    android:text="Сохранить"
+                    android:textColor="@color/colorBlackText" />
+            </LinearLayout>
+
         </LinearLayout>
     </ScrollView>
 

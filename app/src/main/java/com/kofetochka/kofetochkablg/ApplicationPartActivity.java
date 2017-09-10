@@ -156,6 +156,7 @@ public class ApplicationPartActivity extends AppCompatActivity{
         Intent intent = new Intent(this,EditDrinkActivity.class);
         intent.putExtra("Login", Login);
         intent.putExtra("ID_AP",ID_AP_position);
+        intent.putExtra("ID_Application", ID_Application);
         startActivity(intent);
     }
     //Удаление item

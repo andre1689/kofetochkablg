@@ -65,6 +65,7 @@ public class NewDrinkActivity extends AppCompatActivity{
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.new_drink_layout);
+        arrayNameAdditives = new String[0];
         //Инициализацию Toolbar
         InitializationToolbar();
         //Узнаем текуюую дату
@@ -203,7 +204,6 @@ public class NewDrinkActivity extends AppCompatActivity{
     private void InitializationElementsActivity() {
         lv_NameDrink = (ListView) findViewById(R.id.listView_Name);
         lv_VolumeDrink = (ListView) findViewById(R.id.listView_Volume);
-        lv_Additives = (ListView) findViewById(R.id.listView_Additives);
         lv_Syrup = (ListView) findViewById(R.id.listView_Syrup);
         switch_additives = (Switch) findViewById(R.id.switch_Additives);
         switch_Syrup = (Switch) findViewById(R.id.switch_Syrup);
